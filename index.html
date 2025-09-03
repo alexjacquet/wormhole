@@ -3540,6 +3540,85 @@ document.addEventListener('touchmove', (e) => {
     }
     e.preventDefault();
 }, { passive: false });
+
+// Timer Fix Patch - Position relative to wormhole
+// Keeps timer on single line and positions it above the wormhole
+
+// 1. Fix timer positioning to be relative to wormhole
+const fixTimerPosition = () => {
+    const timer = document.querySelector('.countdown-timer');
+    const wormhole = document.querySelector('.wormhole-container');
+    
+    if (timer && wormhole) {
+        // Get wormhole position
+        const wormholeRect = wormhole.getBoundingClientRect();
+        
+        // Position timer above and slightly right of wormhole center
+        timer.style.position = 'fixed';
+        timer.style.left = (wormholeRect.left + wormholeRect.width/2 + 20) + 'px';
+        timer.style.top = (wormholeRect.top - 60) + 'px';
+        timer.style.transform = 'translateX(-50%)';
+    }
+};
+
+// 2. Add styles to keep timer on single line
+const timerStyles = document.createElement('style');
+timerStyles.textContent = `
+    .countdown-timer {
+        white-space: nowrap !important;
+        display: inline-block !important;
+        min-width: auto !important;
+    }
+    
+    .timer-display {
+        white-space: nowrap !important;
+        display: inline-block !important;
+    }
+    
+    .timer-display > span {
+        display: inline !important;
+    }
+    
+    /* Mobile specific */
+    @media (max-width: 768px) {
+        .countdown-timer {
+            padding: 8px 15px !important;
+            font-size: 20px !important;
+        }
+        
+        .timer-display {
+            font-size: 24px !important;
+            letter-spacing: 4px !important;
+        }
+    }
+`;
+document.head.appendChild(timerStyles);
+
+// 3. Update position whenever wormhole moves
+fixTimerPosition();
+
+// Watch for wormhole position changes
+const positionObserver = new MutationObserver(fixTimerPosition);
+const wormhole = document.querySelector('.wormhole-container');
+if (wormhole) {
+    positionObserver.observe(wormhole, { 
+        attributes: true, 
+        attributeFilter: ['style'] 
+    });
+}
+
+// Also update on window resize
+window.addEventListener('resize', fixTimerPosition);
+
+// Update position periodically to catch any changes
+setInterval(fixTimerPosition, 100);
+
+// 4. Override the timer's updatePosition method to use wormhole-relative positioning
+if (window.CountdownTimer) {
+    CountdownTimer.prototype.updatePosition = function() {
+        fixTimerPosition();
+    };
+}
 </script>
 
 

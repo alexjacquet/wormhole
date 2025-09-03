@@ -3395,6 +3395,270 @@ setTimeout(() => {
         xpSection.innerHTML = xpHTML;
     }
 }, 200);
+
+<!-- 
+MOBILE TIMER PATCH
+Add this script block to your HTML right after the existing patches
+or replace the existing timer patch section
+-->
+
+<script id="mobile-timer-patch">
+// Mobile Timer Enhancement Patch
+// Makes timer mobile-friendly with minimize option and better positioning
+
+// 1. Add mobile-friendly CSS
+const mobileTimerStyle = document.createElement('style');
+mobileTimerStyle.textContent = `
+/* Mobile Timer Overrides */
+@media (max-width: 768px) {
+    .countdown-timer {
+        top: 20px !important;
+        right: 20px !important;
+        left: auto !important;
+        transform: none !important;
+        padding: 8px 12px !important;
+        min-width: auto !important;
+    }
+    
+    .timer-display {
+        font-size: 24px !important;
+        letter-spacing: 4px !important;
+    }
+}
+
+/* Minimized state */
+.countdown-timer.minimized {
+    padding: 6px 10px !important;
+    background: rgba(10, 10, 20, 0.8) !important;
+    border-width: 1px !important;
+}
+
+.countdown-timer.minimized .timer-display {
+    font-size: 18px !important;
+    letter-spacing: 2px !important;
+}
+
+/* Timer toggle button */
+.timer-toggle {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 16px;
+    height: 16px;
+    background: rgba(0, 255, 136, 0.1);
+    border: 1px solid rgba(0, 255, 136, 0.3);
+    border-radius: 2px;
+    color: #00ff88;
+    font-size: 10px;
+    line-height: 14px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    z-index: 1;
+    font-family: monospace;
+}
+
+.timer-toggle:hover {
+    background: rgba(0, 255, 136, 0.2);
+    transform: scale(1.1);
+}
+
+/* Make timer draggable on touch devices */
+.countdown-timer {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+    touch-action: none;
+}
+
+.countdown-timer.dragging {
+    cursor: move !important;
+    opacity: 0.8;
+    transition: none !important;
+}
+
+/* Compact mode for very small screens */
+@media (max-width: 380px) {
+    .countdown-timer {
+        top: 10px !important;
+        right: 10px !important;
+    }
+    
+    .timer-display {
+        font-size: 20px !important;
+        letter-spacing: 2px !important;
+    }
+    
+    .countdown-timer.minimized .timer-display {
+        font-size: 16px !important;
+    }
+}
+`;
+document.head.appendChild(mobileTimerStyle);
+
+// 2. Enhance CountdownTimer with minimize and touch support
+setTimeout(() => {
+    const timer = document.querySelector('.countdown-timer');
+    if (!timer) return;
+    
+    // Add minimize toggle button
+    const toggleBtn = document.createElement('div');
+    toggleBtn.className = 'timer-toggle';
+    toggleBtn.innerHTML = '−';
+    toggleBtn.title = 'Minimize timer';
+    timer.appendChild(toggleBtn);
+    
+    // Toggle minimize state
+    let isMinimized = false;
+    toggleBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        isMinimized = !isMinimized;
+        
+        if (isMinimized) {
+            timer.classList.add('minimized');
+            toggleBtn.innerHTML = '+';
+            toggleBtn.title = 'Expand timer';
+        } else {
+            timer.classList.remove('minimized');
+            toggleBtn.innerHTML = '−';
+            toggleBtn.title = 'Minimize timer';
+        }
+    });
+    
+    // Simple touch-based repositioning
+    let isDragging = false;
+    let startX, startY, startLeft, startTop;
+    
+    // Touch start
+    timer.addEventListener('touchstart', (e) => {
+        // Don't drag if clicking the toggle button
+        if (e.target === toggleBtn) return;
+        
+        isDragging = true;
+        timer.classList.add('dragging');
+        
+        const touch = e.touches[0];
+        startX = touch.clientX;
+        startY = touch.clientY;
+        
+        // Get current position
+        const rect = timer.getBoundingClientRect();
+        startLeft = rect.left;
+        startTop = rect.top;
+        
+        e.preventDefault();
+    }, { passive: false });
+    
+    // Touch move
+    document.addEventListener('touchmove', (e) => {
+        if (!isDragging) return;
+        
+        const touch = e.touches[0];
+        const deltaX = touch.clientX - startX;
+        const deltaY = touch.clientY - startY;
+        
+        // Update position
+        timer.style.left = (startLeft + deltaX) + 'px';
+        timer.style.top = (startTop + deltaY) + 'px';
+        timer.style.right = 'auto';
+        timer.style.transform = 'none';
+        
+        e.preventDefault();
+    }, { passive: false });
+    
+    // Touch end
+    document.addEventListener('touchend', () => {
+        if (isDragging) {
+            isDragging = false;
+            timer.classList.remove('dragging');
+            
+            // Snap to edges if close
+            const rect = timer.getBoundingClientRect();
+            const threshold = 50;
+            
+            // Snap to right edge
+            if (window.innerWidth - rect.right < threshold) {
+                timer.style.left = 'auto';
+                timer.style.right = '20px';
+            }
+            
+            // Snap to top edge
+            if (rect.top < threshold) {
+                timer.style.top = '20px';
+            }
+        }
+    });
+    
+    // Auto-minimize on mobile if screen is small
+    if (window.innerWidth <= 480) {
+        setTimeout(() => {
+            toggleBtn.click(); // Auto-minimize on small screens
+        }, 1000);
+    }
+    
+    // Double-tap to reset position
+    let lastTap = 0;
+    timer.addEventListener('touchend', (e) => {
+        if (e.target === toggleBtn) return;
+        
+        const currentTime = new Date().getTime();
+        const tapGap = currentTime - lastTap;
+        
+        if (tapGap < 300 && tapGap > 0) {
+            // Double tap detected - reset position
+            timer.style.left = 'auto';
+            timer.style.right = '20px';
+            timer.style.top = '20px';
+            timer.style.transform = 'none';
+            
+            // Visual feedback
+            timer.style.transition = 'all 0.3s ease';
+            setTimeout(() => {
+                timer.style.transition = '';
+            }, 300);
+        }
+        
+        lastTap = currentTime;
+    });
+    
+}, 100);
+
+// 3. Override the updatePosition method to be mobile-aware
+if (typeof CountdownTimer !== 'undefined') {
+    CountdownTimer.prototype.updatePosition = function() {
+        if (!this.element) return;
+        
+        // On mobile, position in top-right corner instead
+        if (window.innerWidth <= 768) {
+            this.element.style.right = '20px';
+            this.element.style.top = '20px';
+            this.element.style.left = 'auto';
+            this.element.style.transform = 'none';
+        } else {
+            // Desktop positioning (relative to wormhole)
+            const wormholePos = this.config.wormhole ? 
+                this.config.wormhole.config.position : 
+                { x: 50, y: 80 };
+            
+            const xPos = wormholePos.x;
+            const yPos = Math.max(10, wormholePos.y - 15);
+            
+            this.element.style.left = `${xPos}%`;
+            this.element.style.top = `${yPos}%`;
+            this.element.style.transform = 'translate(-50%, -50%)';
+            this.element.style.right = 'auto';
+        }
+    };
+    
+    // Apply to existing timer
+    if (window.app && window.app.modules && window.app.modules.timer) {
+        window.app.modules.timer.updatePosition();
+    }
+}
+
+console.log('Mobile timer patch applied - Timer is now draggable and minimizable!');
+</script>
+
 </script>
 
 

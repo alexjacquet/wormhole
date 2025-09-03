@@ -3541,84 +3541,93 @@ document.addEventListener('touchmove', (e) => {
     e.preventDefault();
 }, { passive: false });
 
-// Timer Fix Patch - Position relative to wormhole
-// Keeps timer on single line and positions it above the wormhole
+// Timer Position Fix - Properly pinned to wormhole
+// Positions timer above and to the right of the wormhole
 
-// 1. Fix timer positioning to be relative to wormhole
-const fixTimerPosition = () => {
-    const timer = document.querySelector('.countdown-timer');
-    const wormhole = document.querySelector('.wormhole-container');
+// Override the timer's updatePosition to use wormhole's percentage position
+CountdownTimer.prototype.updatePosition = function() {
+    if (!this.element) return;
     
-    if (timer && wormhole) {
-        // Get wormhole position
-        const wormholeRect = wormhole.getBoundingClientRect();
-        
-        // Position timer above and slightly right of wormhole center
-        timer.style.position = 'fixed';
-        timer.style.left = (wormholeRect.left + wormholeRect.width/2 + 20) + 'px';
-        timer.style.top = (wormholeRect.top - 60) + 'px';
-        timer.style.transform = 'translateX(-50%)';
-    }
+    // Get wormhole's percentage position directly from its config
+    const wormholePos = this.config.wormhole ? 
+        this.config.wormhole.config.position : 
+        { x: 50, y: 80 };
+    
+    // Position timer above wormhole (reduce Y by about 12-15%)
+    // and slightly to the right (add 3-5% to X)
+    const timerX = wormholePos.x + 3;  // 3% to the right
+    const timerY = Math.max(5, wormholePos.y - 12);  // 12% above, but not off screen
+    
+    // Use percentage positioning like the wormhole does
+    this.element.style.position = 'fixed';
+    this.element.style.left = `${timerX}%`;
+    this.element.style.top = `${timerY}%`;
+    this.element.style.transform = 'translate(-50%, -50%)';
 };
 
-// 2. Add styles to keep timer on single line
-const timerStyles = document.createElement('style');
-timerStyles.textContent = `
+// Add styles to ensure timer stays compact
+const timerCompactStyles = document.createElement('style');
+timerCompactStyles.textContent = `
     .countdown-timer {
         white-space: nowrap !important;
         display: inline-block !important;
-        min-width: auto !important;
+        z-index: 900 !important;
     }
     
     .timer-display {
         white-space: nowrap !important;
-        display: inline-block !important;
+        display: inline-flex !important;
+        align-items: center !important;
     }
     
     .timer-display > span {
-        display: inline !important;
+        display: inline-block !important;
     }
     
-    /* Mobile specific */
+    /* Mobile adjustments */
     @media (max-width: 768px) {
         .countdown-timer {
-            padding: 8px 15px !important;
-            font-size: 20px !important;
+            padding: 8px 12px !important;
         }
         
         .timer-display {
             font-size: 24px !important;
-            letter-spacing: 4px !important;
+            letter-spacing: 3px !important;
         }
     }
 `;
-document.head.appendChild(timerStyles);
+document.head.appendChild(timerCompactStyles);
 
-// 3. Update position whenever wormhole moves
-fixTimerPosition();
-
-// Watch for wormhole position changes
-const positionObserver = new MutationObserver(fixTimerPosition);
-const wormhole = document.querySelector('.wormhole-container');
-if (wormhole) {
-    positionObserver.observe(wormhole, { 
-        attributes: true, 
-        attributeFilter: ['style'] 
-    });
-}
-
-// Also update on window resize
-window.addEventListener('resize', fixTimerPosition);
-
-// Update position periodically to catch any changes
-setInterval(fixTimerPosition, 100);
-
-// 4. Override the timer's updatePosition method to use wormhole-relative positioning
-if (window.CountdownTimer) {
-    CountdownTimer.prototype.updatePosition = function() {
-        fixTimerPosition();
-    };
-}
+// Find and update existing timer
+setTimeout(() => {
+    // Get the app instance
+    const app = window.app || (document.querySelector('#scene') ? {modules: {}} : null);
+    
+    // If timer exists, update its position
+    if (app && app.modules && app.modules.timer) {
+        app.modules.timer.updatePosition();
+    }
+    
+    // Also trigger when wormhole position changes via sliders
+    const wormholeXSlider = document.getElementById('wormholeX');
+    const wormholeYSlider = document.getElementById('wormholeY');
+    
+    if (wormholeXSlider) {
+        wormholeXSlider.addEventListener('input', () => {
+            if (app.modules.timer) {
+                setTimeout(() => app.modules.timer.updatePosition(), 10);
+            }
+        });
+    }
+    
+    if (wormholeYSlider) {
+        wormholeYSlider.addEventListener('input', () => {
+            if (app.modules.timer) {
+                setTimeout(() => app.modules.timer.updatePosition(), 10);
+            }
+        });
+    }
+}, 100);
 </script>
 
 

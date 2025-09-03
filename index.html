@@ -3541,33 +3541,31 @@ document.addEventListener('touchmove', (e) => {
     e.preventDefault();
 }, { passive: false });
 
-// Timer Position Fix - Properly pinned to wormhole
-// Positions timer above and to the right of the wormhole
+// Timer Position Fix - Combined patch that removes conflicts
+// This replaces both the mobile optimization timer positioning and the timer fix patch
 
-// Override the timer's updatePosition to use wormhole's percentage position
-CountdownTimer.prototype.updatePosition = function() {
-    if (!this.element) return;
+// 1. First, remove any conflicting styles that force timer to upper-left
+const conflictingStyles = document.createElement('style');
+conflictingStyles.textContent = `
+    /* Override conflicting mobile styles */
+    @media (max-width: 768px) {
+        .countdown-timer {
+            /* Clear forced positioning */
+            top: unset !important;
+            left: unset !important;
+            transform: unset !important;
+        }
+    }
+    @media (min-width: 769px) {
+        .countdown-timer {
+            /* Clear forced positioning on desktop too */
+            top: unset !important;
+            left: unset !important;
+            transform: unset !important;
+        }
+    }
     
-    // Get wormhole's percentage position directly from its config
-    const wormholePos = this.config.wormhole ? 
-        this.config.wormhole.config.position : 
-        { x: 50, y: 80 };
-    
-    // Position timer above wormhole (reduce Y by about 12-15%)
-    // and slightly to the right (add 3-5% to X)
-    const timerX = wormholePos.x + 3;  // 3% to the right
-    const timerY = Math.max(5, wormholePos.y - 12);  // 12% above, but not off screen
-    
-    // Use percentage positioning like the wormhole does
-    this.element.style.position = 'fixed';
-    this.element.style.left = `${timerX}%`;
-    this.element.style.top = `${timerY}%`;
-    this.element.style.transform = 'translate(-50%, -50%)';
-};
-
-// Add styles to ensure timer stays compact
-const timerCompactStyles = document.createElement('style');
-timerCompactStyles.textContent = `
+    /* Ensure timer stays compact */
     .countdown-timer {
         white-space: nowrap !important;
         display: inline-block !important;
@@ -3584,7 +3582,7 @@ timerCompactStyles.textContent = `
         display: inline-block !important;
     }
     
-    /* Mobile adjustments */
+    /* Mobile size adjustments */
     @media (max-width: 768px) {
         .countdown-timer {
             padding: 8px 12px !important;
@@ -3596,38 +3594,76 @@ timerCompactStyles.textContent = `
         }
     }
 `;
-document.head.appendChild(timerCompactStyles);
+document.head.appendChild(conflictingStyles);
 
-// Find and update existing timer
+// 2. Override the timer's updatePosition to use wormhole's percentage position
+CountdownTimer.prototype.updatePosition = function() {
+    if (!this.element) return;
+    
+    // Get wormhole's percentage position directly from its config
+    const wormholePos = this.config.wormhole ? 
+        this.config.wormhole.config.position : 
+        { x: 50, y: 80 };
+    
+    // Position timer above wormhole
+    const timerX = wormholePos.x + 3;  // 3% to the right
+    const timerY = Math.max(5, wormholePos.y - 12);  // 12% above, but not off screen
+    
+    // Use percentage positioning like the wormhole does
+    this.element.style.position = 'fixed';
+    this.element.style.left = `${timerX}%`;
+    this.element.style.top = `${timerY}%`;
+    this.element.style.transform = 'translate(-50%, -50%)';
+};
+
+// 3. Clear any existing inline styles and update timer position
 setTimeout(() => {
-    // Get the app instance
+    const existingTimer = document.querySelector('.countdown-timer');
+    if (existingTimer) {
+        // Clear inline styles that might have been set
+        existingTimer.style.position = '';
+        existingTimer.style.top = '';
+        existingTimer.style.left = '';
+        existingTimer.style.transform = '';
+    }
+    
+    // Get app instance and update timer
     const app = window.app || (document.querySelector('#scene') ? {modules: {}} : null);
     
-    // If timer exists, update its position
     if (app && app.modules && app.modules.timer) {
         app.modules.timer.updatePosition();
     }
     
-    // Also trigger when wormhole position changes via sliders
+    // 4. Set up listeners for wormhole position changes
     const wormholeXSlider = document.getElementById('wormholeX');
     const wormholeYSlider = document.getElementById('wormholeY');
     
     if (wormholeXSlider) {
-        wormholeXSlider.addEventListener('input', () => {
-            if (app.modules.timer) {
-                setTimeout(() => app.modules.timer.updatePosition(), 10);
+        const updateTimer = () => {
+            if (app && app.modules && app.modules.timer) {
+                app.modules.timer.updatePosition();
             }
-        });
+        };
+        wormholeXSlider.addEventListener('input', updateTimer);
     }
     
     if (wormholeYSlider) {
-        wormholeYSlider.addEventListener('input', () => {
-            if (app.modules.timer) {
-                setTimeout(() => app.modules.timer.updatePosition(), 10);
+        const updateTimer = () => {
+            if (app && app.modules && app.modules.timer) {
+                app.modules.timer.updatePosition();
             }
-        });
+        };
+        wormholeYSlider.addEventListener('input', updateTimer);
     }
-}, 100);
+}, 200);
+
+// 5. Force another update after a short delay to ensure it sticks
+setTimeout(() => {
+    const app = window.app || (document.querySelector('#scene') ? {modules: {}} : null);
+    if (app && app.modules && app.modules.timer) {
+        app.modules.timer.updatePosition();
+    }
+}, 500);
 </script>
 
 

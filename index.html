@@ -3369,210 +3369,180 @@ setTimeout(() => {
     }
 }, 200);
 
-// Mobile Optimization Patch v3 - WITHOUT timer positioning conflicts
-// 1. Ensure viewport is set correctly
-if (!document.querySelector('meta[name="viewport"]')) {
-    const viewport = document.createElement('meta');
-    viewport.name = 'viewport';
-    viewport.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no';
-    document.head.appendChild(viewport);
-}
+// MOBILE-FOCUSED PATCH FOR iPAD/iPHONE - SMALLER EMOJIS
+// Optimized for tap gameplay
 
-// 2. Remove radial activity counter completely
-const radialActivity = document.querySelector('.radial-activity');
-if (radialActivity) {
-    radialActivity.remove();
-}
-
-// 3. Remove counter toggle from control panel
-const counterToggle = document.getElementById('counterToggle');
-if (counterToggle) {
-    counterToggle.closest('.control-group').remove();
-}
-
-// 4. Add mobile-specific styles (WITHOUT timer positioning)
-const mobileStyles = document.createElement('style');
-mobileStyles.textContent = `
-/* Mobile Optimizations */
-@media (max-width: 768px) {
-    /* Adjust control panel for mobile */
-    .controls {
-        right: 10px;
-        top: 10px;
-        width: 240px;
-        max-height: 70vh;
-    }
-    
-    /* Make buttons more touch-friendly */
-    button, .timer-control-btn, .mode-toggle-btn {
-        min-height: 44px;
-        font-size: 16px !important;
-    }
-    
-    /* Timer font size for mobile */
-    .timer-display {
-        font-size: 24px !important;
-    }
-    
-    /* Adjust user tile for mobile */
-    .user-tile {
-        width: 140px;
-        top: 20px;
-        left: 20px;
-    }
-    
-    .progress-meter {
-        top: 15px;
-        left: 145px;
-        transform: scale(0.9);
-    }
-    
-    /* Hide radial activity always */
-    .radial-activity {
-        display: none !important;
-    }
-    
-    /* Make stats panel mobile-friendly */
-    .stats-panel {
-        width: 90vw;
-        max-width: 360px;
-    }
-}
-
-/* Prevent double-tap zoom on iOS */
-* {
-    touch-action: manipulation;
-}
-
-/* Ensure game fills mobile screen */
-@media (max-width: 768px) {
-    body, html, #scene {
-        overflow: hidden;
-        position: fixed;
-        width: 100%;
-        height: 100%;
-    }
-}
-
-/* Timer styling WITHOUT position overrides */
-.countdown-timer {
-    white-space: nowrap !important;
-    display: inline-block !important;
-    z-index: 900 !important;
-}
-
-.timer-display {
-    white-space: nowrap !important;
-    display: inline-flex !important;
-    align-items: center !important;
-}
-
-.timer-display > span {
-    display: inline-block !important;
-}
-
-/* Mobile timer size adjustments */
-@media (max-width: 768px) {
-    .countdown-timer {
-        padding: 8px 12px !important;
-    }
-    
-    .timer-display {
-        font-size: 24px !important;
-        letter-spacing: 3px !important;
-    }
-}
-`;
-document.head.appendChild(mobileStyles);
-
-// 5. Add touch event support
-document.addEventListener('DOMContentLoaded', () => {
-    // Convert click events to touch-friendly events
-    const emojis = document.querySelectorAll('.emoji');
-    emojis.forEach(emoji => {
-        emoji.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            emoji.click();
-        }, { passive: false });
-    });
-});
-
-// 6. Detect mobile and auto-collapse controls
-const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-if (isMobile) {
-    setTimeout(() => {
-        const controls = document.getElementById('controls');
-        if (controls && !controls.classList.contains('collapsed')) {
-            controls.classList.add('collapsed');
-        }
-    }, 1000);
-}
-
-// 7. Prevent scrolling/bouncing on mobile
-document.addEventListener('touchmove', (e) => {
-    if (e.target.closest('.controls')) {
-        return; // Allow scrolling in controls
-    }
-    e.preventDefault();
-}, { passive: false });
-
-// Timer Position Fix - Properly attach to wormhole
+// 1. Timer positioning for mobile devices
 CountdownTimer.prototype.updatePosition = function() {
     if (!this.element) return;
     
-    // Get wormhole's percentage position directly from its config
     const wormholePos = this.config.wormhole ? 
         this.config.wormhole.config.position : 
         { x: 50, y: 80 };
     
-    // Position timer above and to the right of wormhole
-    const timerX = wormholePos.x + 3;  // 3% to the right
-    const timerY = Math.max(5, wormholePos.y - 12);  // 12% above, but not off screen
+    // Timer stays "near" wormhole (above and slightly right)
+    const timerX = wormholePos.x + 5;  // 5% to the right
+    const timerY = Math.max(10, wormholePos.y - 15);  // 15% above
     
-    // Use percentage positioning like the wormhole does
     this.element.style.position = 'fixed';
     this.element.style.left = `${timerX}%`;
     this.element.style.top = `${timerY}%`;
     this.element.style.transform = 'translate(-50%, -50%)';
 };
 
-// Apply timer position fix after everything loads
+// 2. Mobile-optimized styles with SMALLER emojis
+const mobileStyles = document.createElement('style');
+mobileStyles.textContent = `
+/* iPad/iPhone Optimizations */
+@media (max-width: 1024px) {
+    /* Smaller emojis for tap gameplay */
+    .emoji {
+        font-size: 44px !important;  /* Reduced from 60px */
+    }
+    
+    .emoji.fuel {
+        font-size: 48px !important;  /* Slightly larger for fuel */
+    }
+    
+    .emoji.bot {
+        font-size: 46px !important;  /* Bots slightly larger */
+    }
+    
+    /* Choice mode emojis can be a bit bigger since there's only 3 */
+    .emoji.choice {
+        font-size: 52px !important;
+    }
+    
+    /* Compact timer for mobile */
+    .countdown-timer {
+        padding: 8px 12px !important;
+        background: rgba(10, 10, 20, 0.9) !important;
+    }
+    
+    .timer-display {
+        font-size: 24px !important;
+        letter-spacing: 2px !important;
+    }
+    
+    /* Hide radial activity as requested */
+    .radial-activity {
+        display: none !important;
+    }
+    
+    /* Compact controls */
+    .controls {
+        max-width: 280px;
+        font-size: 13px;
+    }
+    
+    /* Touch-friendly buttons (minimum 44px Apple guideline) */
+    button {
+        min-height: 44px;
+    }
+    
+    /* Compact header elements */
+    .user-tile {
+        width: 120px;
+    }
+    
+    .progress-meter {
+        transform: scale(0.9);
+    }
+}
+
+/* Even smaller on phones vs iPads */
+@media (max-width: 667px) {
+    .emoji {
+        font-size: 40px !important;  /* Even smaller for phones */
+    }
+    
+    .emoji.fuel {
+        font-size: 44px !important;
+    }
+    
+    .emoji.choice {
+        font-size: 48px !important;
+    }
+}
+
+/* Prevent iOS bounce and zoom */
+* {
+    touch-action: manipulation;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+}
+
+/* Lock viewport */
+body, html {
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+}
+`;
+document.head.appendChild(mobileStyles);
+
+// 3. Fix timer position after DOM loads
 setTimeout(() => {
-    const app = window.app || (document.querySelector('#scene') ? {modules: {}} : null);
-    
-    if (app && app.modules && app.modules.timer) {
-        app.modules.timer.updatePosition();
+    const timerElement = document.querySelector('.countdown-timer');
+    if (timerElement) {
+        const wormholeElement = document.getElementById('wormhole');
+        if (wormholeElement) {
+            const wormholeLeft = parseFloat(wormholeElement.style.left) || 50;
+            const wormholeTop = parseFloat(wormholeElement.style.top) || 80;
+            
+            const timerX = wormholeLeft + 5;
+            const timerY = Math.max(10, wormholeTop - 15);
+            
+            timerElement.style.position = 'fixed';
+            timerElement.style.left = `${timerX}%`;
+            timerElement.style.top = `${timerY}%`;
+            timerElement.style.transform = 'translate(-50%, -50%)';
+        }
     }
     
-    // Set up listeners for wormhole position changes
-    const wormholeXSlider = document.getElementById('wormholeX');
-    const wormholeYSlider = document.getElementById('wormholeY');
-    
-    if (wormholeXSlider) {
-        wormholeXSlider.addEventListener('input', () => {
-            if (app && app.modules && app.modules.timer) {
-                app.modules.timer.updatePosition();
-            }
-        });
+    // Auto-collapse controls on touch devices
+    if ('ontouchstart' in window) {
+        const controls = document.getElementById('controls');
+        if (controls) {
+            controls.classList.add('collapsed');
+        }
     }
+}, 300);
+
+// 4. Handle slider updates
+document.addEventListener('DOMContentLoaded', () => {
+    const updateTimerPosition = () => {
+        const timerElement = document.querySelector('.countdown-timer');
+        const wormholeElement = document.getElementById('wormhole');
+        
+        if (timerElement && wormholeElement) {
+            const wormholeLeft = parseFloat(wormholeElement.style.left) || 50;
+            const wormholeTop = parseFloat(wormholeElement.style.top) || 80;
+            
+            timerElement.style.left = `${wormholeLeft + 5}%`;
+            timerElement.style.top = `${Math.max(10, wormholeTop - 15)}%`;
+        }
+    };
     
-    if (wormholeYSlider) {
-        wormholeYSlider.addEventListener('input', () => {
-            if (app && app.modules && app.modules.timer) {
-                app.modules.timer.updatePosition();
-            }
-        });
+    ['wormholeX', 'wormholeY'].forEach(id => {
+        const slider = document.getElementById(id);
+        if (slider) {
+            slider.addEventListener('input', updateTimerPosition);
+        }
+    });
+});
+
+// [Keep your existing stats panel code as-is]
+
+// Connect stats panel to progress meter
+setInterval(() => {
+    const meterText = document.getElementById('meter-text');
+    const fuelElement = document.getElementById('fuelRemaining');
+    
+    if (meterText && fuelElement) {
+        fuelElement.textContent = meterText.textContent;
     }
 }, 100);
-
-// Force another update after a short delay to ensure it sticks
-setTimeout(() => {
-    const app = window.app || (document.querySelector('#scene') ? {modules: {}} : null);
-    if (app && app.modules && app.modules.timer) {
-        app.modules.timer.updatePosition();
-    }
-}, 500);
-</script>
-<!-- PATCH AREA END -->
 </body>
 </html>

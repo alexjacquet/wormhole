@@ -3396,9 +3396,8 @@ setTimeout(() => {
     }
 }, 200);
 
-
-// Mobile Optimization Patch
-// Add this to the live-patches section or create a new script tag
+// Mobile Optimization Patch v2
+// Removes counter, repositions timer, keeps emoji sizes
 
 // 1. Ensure viewport is set correctly (add if missing)
 if (!document.querySelector('meta[name="viewport"]')) {
@@ -3408,18 +3407,32 @@ if (!document.querySelector('meta[name="viewport"]')) {
     document.head.appendChild(viewport);
 }
 
-// 2. Add mobile-specific styles
+// 2. Remove radial activity counter completely
+const radialActivity = document.querySelector('.radial-activity');
+if (radialActivity) {
+    radialActivity.remove();
+}
+
+// 3. Move countdown timer to the right of user tile
+const timer = document.querySelector('.countdown-timer');
+if (timer) {
+    timer.style.position = 'fixed';
+    timer.style.top = '30px';
+    timer.style.left = '240px';
+    timer.style.transform = 'none';
+}
+
+// 4. Remove counter toggle from control panel
+const counterToggle = document.getElementById('counterToggle');
+if (counterToggle) {
+    counterToggle.closest('.control-group').remove();
+}
+
+// 5. Add mobile-specific styles
 const mobileStyles = document.createElement('style');
 mobileStyles.textContent = `
 /* Mobile Optimizations */
 @media (max-width: 768px) {
-    /* Make emojis bigger for easier tapping */
-    .emoji {
-        font-size: 72px !important;
-        min-width: 72px;
-        min-height: 72px;
-    }
-    
     /* Adjust control panel for mobile */
     .controls {
         right: 10px;
@@ -3434,26 +3447,23 @@ mobileStyles.textContent = `
         font-size: 16px !important;
     }
     
-    /* Adjust wormhole container for mobile */
-    .wormhole-container {
-        width: 120px;
-        height: 120px;
-    }
-    
-    /* Reposition countdown timer */
+    /* Position timer next to user tile */
     .countdown-timer {
-        font-size: 28px !important;
+        top: 30px !important;
+        left: 220px !important;
+        transform: none !important;
+        font-size: 24px !important;
     }
     
     .timer-display {
-        font-size: 28px !important;
+        font-size: 24px !important;
     }
     
-    /* Hide or minimize less essential elements */
+    /* Adjust user tile for mobile */
     .user-tile {
-        width: 120px;
-        top: 15px;
-        left: 15px;
+        width: 140px;
+        top: 20px;
+        left: 20px;
     }
     
     .progress-meter {
@@ -3462,14 +3472,24 @@ mobileStyles.textContent = `
         transform: scale(0.9);
     }
     
+    /* Hide radial activity always */
     .radial-activity {
-        display: none; /* Hide on mobile to save space */
+        display: none !important;
     }
     
     /* Make stats panel mobile-friendly */
     .stats-panel {
         width: 90vw;
         max-width: 360px;
+    }
+}
+
+/* Desktop - also position timer next to user tile */
+@media (min-width: 769px) {
+    .countdown-timer {
+        top: 30px !important;
+        left: 240px !important;
+        transform: none !important;
     }
 }
 
@@ -3490,7 +3510,7 @@ mobileStyles.textContent = `
 `;
 document.head.appendChild(mobileStyles);
 
-// 3. Add touch event support for emojis
+// 6. Add touch event support
 document.addEventListener('DOMContentLoaded', () => {
     // Convert click events to touch-friendly events
     const emojis = document.querySelectorAll('.emoji');
@@ -3502,7 +3522,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// 4. Detect mobile and auto-collapse controls
+// 7. Detect mobile and auto-collapse controls
 const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 if (isMobile) {
     setTimeout(() => {
@@ -3513,7 +3533,7 @@ if (isMobile) {
     }, 1000);
 }
 
-// 5. Prevent scrolling/bouncing on mobile
+// 8. Prevent scrolling/bouncing on mobile
 document.addEventListener('touchmove', (e) => {
     if (e.target.closest('.controls')) {
         return; // Allow scrolling in controls

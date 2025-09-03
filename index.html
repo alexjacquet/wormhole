@@ -3243,31 +3243,6 @@ setTimeout(() => {
     }
 }, 100);
 
-// Fix: Make countdown timer responsive like wormhole
-// Override the CountdownTimer's updatePosition method
-CountdownTimer.prototype.updatePosition = function() {
-    if (!this.element) return;
-    
-    // Position relative to wormhole using percentages
-    const wormholePos = this.config.wormhole ? 
-        this.config.wormhole.config.position : 
-        { x: 50, y: 80 };
-    
-    // Place timer above wormhole (subtract ~15% for spacing)
-    const xPos = wormholePos.x;
-    const yPos = Math.max(10, wormholePos.y - 15);
-    
-    // Use percentages like the wormhole does
-    this.element.style.left = `${xPos}%`;
-    this.element.style.top = `${yPos}%`;
-    this.element.style.transform = 'translate(-50%, -50%)';
-};
-
-// Apply the fix to existing timer
-if (window.app && window.app.modules && window.app.modules.timer) {
-    window.app.modules.timer.updatePosition();
-}
-
 // Fix: Connect stats panel to progress meter - Direct approach
 setInterval(() => {
     // Get the actual progress value from the meter's display text
@@ -3282,8 +3257,6 @@ setInterval(() => {
 }, 100);
 
 // Enhancement: Add XP progress bars to stats panel
-// Replace the XP section HTML and add new styles
-
 // Add new CSS for progress bars
 const xpBarStyles = document.createElement('style');
 xpBarStyles.textContent = `
@@ -3396,10 +3369,8 @@ setTimeout(() => {
     }
 }, 200);
 
-// Mobile Optimization Patch v2
-// Removes counter, repositions timer, keeps emoji sizes
-
-// 1. Ensure viewport is set correctly (add if missing)
+// Mobile Optimization Patch v3 - WITHOUT timer positioning conflicts
+// 1. Ensure viewport is set correctly
 if (!document.querySelector('meta[name="viewport"]')) {
     const viewport = document.createElement('meta');
     viewport.name = 'viewport';
@@ -3413,22 +3384,13 @@ if (radialActivity) {
     radialActivity.remove();
 }
 
-// 3. Move countdown timer to the right of user tile
-const timer = document.querySelector('.countdown-timer');
-if (timer) {
-    timer.style.position = 'fixed';
-    timer.style.top = '30px';
-    timer.style.left = '240px';
-    timer.style.transform = 'none';
-}
-
-// 4. Remove counter toggle from control panel
+// 3. Remove counter toggle from control panel
 const counterToggle = document.getElementById('counterToggle');
 if (counterToggle) {
     counterToggle.closest('.control-group').remove();
 }
 
-// 5. Add mobile-specific styles
+// 4. Add mobile-specific styles (WITHOUT timer positioning)
 const mobileStyles = document.createElement('style');
 mobileStyles.textContent = `
 /* Mobile Optimizations */
@@ -3447,14 +3409,7 @@ mobileStyles.textContent = `
         font-size: 16px !important;
     }
     
-    /* Position timer next to user tile */
-    .countdown-timer {
-        top: 30px !important;
-        left: 220px !important;
-        transform: none !important;
-        font-size: 24px !important;
-    }
-    
+    /* Timer font size for mobile */
     .timer-display {
         font-size: 24px !important;
     }
@@ -3484,15 +3439,6 @@ mobileStyles.textContent = `
     }
 }
 
-/* Desktop - also position timer next to user tile */
-@media (min-width: 769px) {
-    .countdown-timer {
-        top: 30px !important;
-        left: 240px !important;
-        transform: none !important;
-    }
-}
-
 /* Prevent double-tap zoom on iOS */
 * {
     touch-action: manipulation;
@@ -3507,10 +3453,39 @@ mobileStyles.textContent = `
         height: 100%;
     }
 }
+
+/* Timer styling WITHOUT position overrides */
+.countdown-timer {
+    white-space: nowrap !important;
+    display: inline-block !important;
+    z-index: 900 !important;
+}
+
+.timer-display {
+    white-space: nowrap !important;
+    display: inline-flex !important;
+    align-items: center !important;
+}
+
+.timer-display > span {
+    display: inline-block !important;
+}
+
+/* Mobile timer size adjustments */
+@media (max-width: 768px) {
+    .countdown-timer {
+        padding: 8px 12px !important;
+    }
+    
+    .timer-display {
+        font-size: 24px !important;
+        letter-spacing: 3px !important;
+    }
+}
 `;
 document.head.appendChild(mobileStyles);
 
-// 6. Add touch event support
+// 5. Add touch event support
 document.addEventListener('DOMContentLoaded', () => {
     // Convert click events to touch-friendly events
     const emojis = document.querySelectorAll('.emoji');
@@ -3522,7 +3497,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// 7. Detect mobile and auto-collapse controls
+// 6. Detect mobile and auto-collapse controls
 const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 if (isMobile) {
     setTimeout(() => {
@@ -3533,7 +3508,7 @@ if (isMobile) {
     }, 1000);
 }
 
-// 8. Prevent scrolling/bouncing on mobile
+// 7. Prevent scrolling/bouncing on mobile
 document.addEventListener('touchmove', (e) => {
     if (e.target.closest('.controls')) {
         return; // Allow scrolling in controls
@@ -3541,62 +3516,7 @@ document.addEventListener('touchmove', (e) => {
     e.preventDefault();
 }, { passive: false });
 
-// Timer Position Fix - Combined patch that removes conflicts
-// This replaces both the mobile optimization timer positioning and the timer fix patch
-
-// 1. First, remove any conflicting styles that force timer to upper-left
-const conflictingStyles = document.createElement('style');
-conflictingStyles.textContent = `
-    /* Override conflicting mobile styles */
-    @media (max-width: 768px) {
-        .countdown-timer {
-            /* Clear forced positioning */
-            top: unset !important;
-            left: unset !important;
-            transform: unset !important;
-        }
-    }
-    @media (min-width: 769px) {
-        .countdown-timer {
-            /* Clear forced positioning on desktop too */
-            top: unset !important;
-            left: unset !important;
-            transform: unset !important;
-        }
-    }
-    
-    /* Ensure timer stays compact */
-    .countdown-timer {
-        white-space: nowrap !important;
-        display: inline-block !important;
-        z-index: 900 !important;
-    }
-    
-    .timer-display {
-        white-space: nowrap !important;
-        display: inline-flex !important;
-        align-items: center !important;
-    }
-    
-    .timer-display > span {
-        display: inline-block !important;
-    }
-    
-    /* Mobile size adjustments */
-    @media (max-width: 768px) {
-        .countdown-timer {
-            padding: 8px 12px !important;
-        }
-        
-        .timer-display {
-            font-size: 24px !important;
-            letter-spacing: 3px !important;
-        }
-    }
-`;
-document.head.appendChild(conflictingStyles);
-
-// 2. Override the timer's updatePosition to use wormhole's percentage position
+// Timer Position Fix - Properly attach to wormhole
 CountdownTimer.prototype.updatePosition = function() {
     if (!this.element) return;
     
@@ -3605,7 +3525,7 @@ CountdownTimer.prototype.updatePosition = function() {
         this.config.wormhole.config.position : 
         { x: 50, y: 80 };
     
-    // Position timer above wormhole
+    // Position timer above and to the right of wormhole
     const timerX = wormholePos.x + 3;  // 3% to the right
     const timerY = Math.max(5, wormholePos.y - 12);  // 12% above, but not off screen
     
@@ -3616,48 +3536,36 @@ CountdownTimer.prototype.updatePosition = function() {
     this.element.style.transform = 'translate(-50%, -50%)';
 };
 
-// 3. Clear any existing inline styles and update timer position
+// Apply timer position fix after everything loads
 setTimeout(() => {
-    const existingTimer = document.querySelector('.countdown-timer');
-    if (existingTimer) {
-        // Clear inline styles that might have been set
-        existingTimer.style.position = '';
-        existingTimer.style.top = '';
-        existingTimer.style.left = '';
-        existingTimer.style.transform = '';
-    }
-    
-    // Get app instance and update timer
     const app = window.app || (document.querySelector('#scene') ? {modules: {}} : null);
     
     if (app && app.modules && app.modules.timer) {
         app.modules.timer.updatePosition();
     }
     
-    // 4. Set up listeners for wormhole position changes
+    // Set up listeners for wormhole position changes
     const wormholeXSlider = document.getElementById('wormholeX');
     const wormholeYSlider = document.getElementById('wormholeY');
     
     if (wormholeXSlider) {
-        const updateTimer = () => {
+        wormholeXSlider.addEventListener('input', () => {
             if (app && app.modules && app.modules.timer) {
                 app.modules.timer.updatePosition();
             }
-        };
-        wormholeXSlider.addEventListener('input', updateTimer);
+        });
     }
     
     if (wormholeYSlider) {
-        const updateTimer = () => {
+        wormholeYSlider.addEventListener('input', () => {
             if (app && app.modules && app.modules.timer) {
                 app.modules.timer.updatePosition();
             }
-        };
-        wormholeYSlider.addEventListener('input', updateTimer);
+        });
     }
-}, 200);
+}, 100);
 
-// 5. Force another update after a short delay to ensure it sticks
+// Force another update after a short delay to ensure it sticks
 setTimeout(() => {
     const app = window.app || (document.querySelector('#scene') ? {modules: {}} : null);
     if (app && app.modules && app.modules.timer) {
@@ -3665,8 +3573,6 @@ setTimeout(() => {
     }
 }, 500);
 </script>
-
-
 <!-- PATCH AREA END -->
 </body>
 </html>

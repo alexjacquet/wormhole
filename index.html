@@ -949,8 +949,16 @@ document.getElementById('modeBtn').onclick = () => {
     const modes = ['in', 'out', 'pick', 'invasion'];
     const modeNames = { in: '🌀 SUCK', out: '✨ BLOW', pick: '🎯 PICK 1', invasion: '🤖 INVASION' };
     const currentIndex = modes.indexOf(CONFIG.mode);
+    const oldMode = CONFIG.mode;
     CONFIG.mode = modes[(currentIndex + 1) % modes.length];
     document.getElementById('modeBtn').textContent = `MODE: ${modeNames[CONFIG.mode]}`;
+    
+    // Clear pick choices when leaving pick mode
+    if (oldMode === 'pick') {
+        emojiStream.activeChoices.forEach(c => c.element.remove());
+        emojiStream.activeChoices = [];
+    }
+    
     emojiStream.reset();
 };
 

@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Wormhole Simplified</title>
+<script>
+// EDIT VERSION HERE
+const VERSION = "v001";
+</script>
 <style>
 body {
     margin: 0;
@@ -166,6 +170,50 @@ body {
     color: white;
     width: 220px;
     backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+
+.controls.collapsed {
+    padding: 10px;
+    width: auto;
+}
+
+.controls.collapsed .control-content {
+    display: none;
+}
+
+.control-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.controls.collapsed .control-header {
+    margin-bottom: 0;
+}
+
+.version-text {
+    font-size: 12px;
+    color: #aaa;
+}
+
+.collapse-btn {
+    background: none;
+    border: none;
+    color: #aaa;
+    cursor: pointer;
+    font-size: 18px;
+    padding: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.collapse-btn:hover {
+    color: #4584FF;
 }
 
 .control-group {
@@ -257,33 +305,43 @@ input[type="range"]::-webkit-slider-thumb {
 </div>
 
 <!-- Controls -->
-<div class="controls">
-    <div class="control-group">
-        <button id="modeBtn" class="mode-btn">MODE: 🌀 SUCK</button>
+<div class="controls" id="controls">
+    <div class="control-header">
+        <span class="version-text" id="versionText"></span>
+        <button class="collapse-btn" id="collapseBtn">−</button>
     </div>
     
-    <div class="control-group">
-        <label>Fuel Emojis (20% boost)</label>
-        <button id="fuelToggle" class="toggle-btn active">FUEL: ON</button>
-    </div>
-    
-    <div class="control-group">
-        <label>X Position: <span id="xValue" class="value">50</span>%</label>
-        <input type="range" id="xSlider" min="20" max="80" value="50">
-    </div>
-    
-    <div class="control-group">
-        <label>Y Position: <span id="yValue" class="value">80</span>%</label>
-        <input type="range" id="ySlider" min="50" max="90" value="80">
-    </div>
-    
-    <div class="control-group">
-        <label>Size: <span id="sizeValue" class="value">260</span>px</label>
-        <input type="range" id="sizeSlider" min="150" max="350" value="260">
+    <div class="control-content">
+        <div class="control-group">
+            <button id="modeBtn" class="mode-btn">MODE: 🌀 SUCK</button>
+        </div>
+        
+        <div class="control-group">
+            <label>Fuel Emojis (20% boost)</label>
+            <button id="fuelToggle" class="toggle-btn active">FUEL: ON</button>
+        </div>
+        
+        <div class="control-group">
+            <label>X Position: <span id="xValue" class="value">50</span>%</label>
+            <input type="range" id="xSlider" min="20" max="80" value="50">
+        </div>
+        
+        <div class="control-group">
+            <label>Y Position: <span id="yValue" class="value">80</span>%</label>
+            <input type="range" id="ySlider" min="50" max="90" value="80">
+        </div>
+        
+        <div class="control-group">
+            <label>Size: <span id="sizeValue" class="value">260</span>px</label>
+            <input type="range" id="sizeSlider" min="150" max="350" value="260">
+        </div>
     </div>
 </div>
 
 <script>
+// Display version
+document.getElementById('versionText').textContent = VERSION;
+
 // Configuration
 const CONFIG = {
     mode: 'in',
@@ -918,6 +976,15 @@ document.getElementById('sizeSlider').oninput = (e) => {
     CONFIG.wormhole.size = e.target.value;
     document.getElementById('sizeValue').textContent = e.target.value;
     wormhole.updateSize();
+};
+
+// Collapse/Expand Controls
+document.getElementById('collapseBtn').onclick = () => {
+    const controls = document.getElementById('controls');
+    const btn = document.getElementById('collapseBtn');
+    
+    controls.classList.toggle('collapsed');
+    btn.textContent = controls.classList.contains('collapsed') ? '+' : '−';
 };
 </script>
 </body>

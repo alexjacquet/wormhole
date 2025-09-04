@@ -3,11 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Wormhole</title>
+<title>Wormhole Simplified</title>
 <style>
-/* ============================================
-   BASE STYLES
-   ============================================ */
 body {
     margin: 0;
     background: #000;
@@ -19,50 +16,18 @@ body {
     position: relative;
     width: 100vw;
     height: 100vh;
-    background: radial-gradient(ellipse at center,
-        #000814 0%,
-        #000511 40%,
-        #000000 100%);
+    background: radial-gradient(ellipse at center, #000814 0%, #000511 40%, #000000 100%);
 }
 
-/* ============================================
-   MODULE: USER TILE
-   ============================================ */
-.user-tile {
-    position: fixed;
-    top: 30px;
-    left: 30px;
-    z-index: 999;
-    width: 180px;
-    height: auto;
-}
-
-.user-tile img {
-    width: 100%;
-    height: auto;
-    display: block;
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-}
-
-/* ============================================
-   MODULE: PROGRESS METER
-   ============================================ */
+/* Progress Meter */
 .progress-meter {
     position: fixed;
     top: 25px;
-    left: 165px;
+    left: 25px;
     z-index: 1001;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    transition: all 0.3s ease;
+    width: 60px;
+    height: 60px;
 }
-
-.progress-meter.simple { gap: 0; }
-.progress-meter.simple .rocket { display: none; }
-.progress-meter.simple .rocket-center { display: block; }
-.progress-meter.simple .progress-text { display: none; }
 
 .progress-circle {
     position: relative;
@@ -93,25 +58,6 @@ body {
     transition: stroke-dashoffset 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.progress-text {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: white;
-    font-size: 13px;
-    font-weight: 600;
-    text-align: center;
-    min-width: 35px;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
-}
-
-.rocket {
-    font-size: 28px;
-    transition: transform 0.3s ease;
-    filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.6));
-}
-
 .rocket-center {
     position: absolute;
     top: 50%;
@@ -119,327 +65,16 @@ body {
     transform: translate(-50%, -50%);
     font-size: 26px;
     filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.6));
-    display: none;
-    z-index: 2;
-    transition: transform 0.3s ease;
 }
 
-/* Progress Meter Animations */
-@keyframes meterImpact {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.08); }
-    100% { transform: scale(1); }
-}
-
-.progress-meter.impact {
-    animation: meterImpact 0.3s ease;
-}
-
-.progress-meter.damage {
-    animation: meterDamage 0.5s ease;
-}
-
-@keyframes meterDamage {
-    0%, 100% { transform: translateX(0); }
-    10% { transform: translateX(-3px); }
-    20% { transform: translateX(3px); }
-    30% { transform: translateX(-2px); }
-    40% { transform: translateX(2px); }
-}
-
-.progress-meter.almost-full .rocket {
-    animation: rocketVibrate 0.1s ease infinite;
-}
-
-@keyframes rocketVibrate {
-    0%, 100% { transform: translateX(0) rotate(0deg); }
-    25% { transform: translateX(-1px) rotate(-2deg); }
-    75% { transform: translateX(1px) rotate(2deg); }
-}
-
-.progress-meter.celebrating {
-    animation: celebratePulse 1s ease-in-out;
-}
-
-@keyframes celebratePulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.15); }
-}
-
-/* ============================================
-   MODULE: COUNTDOWN TIMER
-   ============================================ */
-.countdown-timer {
-    position: fixed;
-    z-index: 900;
-    background: linear-gradient(135deg, 
-        rgba(10, 10, 20, 0.95) 0%, 
-        rgba(20, 20, 40, 0.95) 100%);
-    border: 2px solid rgba(69, 132, 255, 0.3);
-    border-radius: 8px;
-    padding: 12px 20px;
-    box-shadow: 
-        0 4px 20px rgba(0, 0, 0, 0.8),
-        inset 0 0 20px rgba(69, 132, 255, 0.1),
-        0 0 40px rgba(69, 132, 255, 0.2);
-    backdrop-filter: blur(10px);
-    transition: all 0.3s ease;
-}
-
-/* Removed the ::before pseudo-element that displayed "MISSION TIME" */
-
-.timer-display {
-    font-family: 'Courier New', monospace;
-    font-size: 36px;
-    font-weight: bold;
-    color: #00ff88;
-    text-shadow: 
-        0 0 10px #00ff88,
-        0 0 20px rgba(0, 255, 136, 0.5),
-        0 0 30px rgba(0, 255, 136, 0.3);
-    letter-spacing: 6px;
-    position: relative;
-    padding: 5px 0;
-}
-
-.timer-display.warning {
-    color: #ffaa00;
-    text-shadow: 
-        0 0 10px #ffaa00,
-        0 0 20px rgba(255, 170, 0, 0.5),
-        0 0 30px rgba(255, 170, 0, 0.3);
-    animation: warningPulse 1s ease-in-out infinite;
-}
-
-.timer-display.critical {
-    color: #ff3333;
-    text-shadow: 
-        0 0 10px #ff3333,
-        0 0 20px rgba(255, 51, 51, 0.5),
-        0 0 30px rgba(255, 51, 51, 0.3);
-    animation: criticalPulse 0.5s ease-in-out infinite;
-}
-
-@keyframes warningPulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.7; }
-}
-
-@keyframes criticalPulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.8; transform: scale(1.02); }
-}
-
-.timer-colon {
-    animation: colonBlink 1s steps(1) infinite;
-    display: inline-block;
-}
-
-@keyframes colonBlink {
-    0%, 49% { opacity: 1; }
-    50%, 100% { opacity: 0.3; }
-}
-
-/* ============================================
-   MODULE: GAME OVER SCREEN
-   ============================================ */
-.game-over-screen {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: radial-gradient(ellipse at center,
-        rgba(0, 0, 0, 0.95) 0%,
-        rgba(0, 0, 0, 0.98) 50%,
-        #000000 100%);
-    z-index: 10000;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.5s ease;
-}
-
-.game-over-screen.active {
-    opacity: 1;
-    pointer-events: auto;
-}
-
-.game-over-text {
-    font-family: 'Courier New', monospace;
-    font-size: 72px;
-    font-weight: 900;
-    letter-spacing: 8px;
-    color: #ff3333;
-    text-shadow: 
-        0 0 20px #ff3333,
-        0 0 40px rgba(255, 51, 51, 0.5),
-        0 0 60px rgba(255, 51, 51, 0.3),
-        0 2px 0 #aa0000,
-        0 4px 0 #880000;
-    margin-bottom: 40px;
-    animation: gameOverGlitch 2s ease-in-out infinite;
-}
-
-@keyframes gameOverGlitch {
-    0%, 100% { 
-        text-shadow: 
-            0 0 20px #ff3333,
-            0 0 40px rgba(255, 51, 51, 0.5),
-            0 0 60px rgba(255, 51, 51, 0.3),
-            0 2px 0 #aa0000,
-            0 4px 0 #880000;
-    }
-    25% {
-        text-shadow: 
-            -2px 0 20px #ff3333,
-            2px 0 40px rgba(255, 51, 51, 0.5),
-            0 0 60px rgba(255, 51, 51, 0.3),
-            0 2px 0 #aa0000,
-            0 4px 0 #880000;
-    }
-    50% {
-        text-shadow: 
-            2px 0 20px #ff3333,
-            -2px 0 40px rgba(255, 51, 51, 0.5),
-            0 0 60px rgba(255, 51, 51, 0.3),
-            0 2px 0 #aa0000,
-            0 4px 0 #880000;
-    }
-}
-
-.restart-button {
-    padding: 20px 60px;
-    font-size: 24px;
-    font-weight: 700;
-    letter-spacing: 3px;
-    background: linear-gradient(135deg, #00ff88 0%, #00ddff 100%);
-    border: none;
-    border-radius: 8px;
-    color: #000;
-    cursor: pointer;
-    text-transform: uppercase;
-    box-shadow: 
-        0 4px 20px rgba(0, 255, 136, 0.4),
-        0 0 40px rgba(0, 255, 136, 0.2);
-    transition: all 0.3s ease;
-    animation: restartPulse 2s ease-in-out infinite;
-}
-
-.restart-button:hover {
-    transform: translateY(-3px);
-    box-shadow: 
-        0 6px 30px rgba(0, 255, 136, 0.6),
-        0 0 60px rgba(0, 255, 136, 0.3);
-}
-
-@keyframes restartPulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-}
-
-/* ============================================
-   MODULE: RADIAL ACTIVITY CHART
-   ============================================ */
-.radial-activity {
-    position: fixed;
-    top: 30px;
-    left: 230px;
-    z-index: 999;
-    width: 110px;
-    height: 110px;
-    background: radial-gradient(ellipse at center,
-        rgba(20, 30, 50, 0.9) 0%,
-        rgba(10, 15, 25, 0.95) 100%);
-    border-radius: 50%;
-    padding: 5px;
-    box-shadow: 
-        inset 0 0 15px rgba(0, 0, 0, 0.5),
-        0 4px 20px rgba(0, 0, 0, 0.6),
-        0 0 30px rgba(69, 132, 255, 0.1);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    transition: opacity 0.3s ease, transform 0.3s ease;
-}
-
-.radial-activity.hidden {
-    opacity: 0;
-    transform: scale(0.8);
-    pointer-events: none;
-}
-
-.radial-activity::before {
-    content: '';
-    position: absolute;
-    top: -2px;
-    left: -2px;
-    right: -2px;
-    bottom: -2px;
-    background: conic-gradient(
-        from 0deg,
-        transparent,
-        rgba(69, 132, 255, 0.3),
-        rgba(149, 40, 253, 0.3),
-        transparent
-    );
-    border-radius: 50%;
-    animation: rotateBorder 20s linear infinite;
-    opacity: 0.5;
-    z-index: -1;
-}
-
-@keyframes rotateBorder {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
-
-.radial-canvas {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    position: relative;
-}
-
-.radial-emoji {
-    position: absolute;
-    font-size: 16px;
-    transform: translate(-50%, -50%);
-    pointer-events: none;
-    user-select: none;
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.8));
-    transition: all 0.3s ease;
-    z-index: 10;
-}
-
-.radial-emoji.active {
-    font-size: 20px;
-    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.8));
-    animation: emojiPulse 0.3s ease;
-}
-
-@keyframes emojiPulse {
-    0% { transform: translate(-50%, -50%) scale(1); }
-    50% { transform: translate(-50%, -50%) scale(1.3); }
-    100% { transform: translate(-50%, -50%) scale(1); }
-}
-
-/* ============================================
-   MODULE: WORMHOLE
-   ============================================ */
+/* Wormhole */
 .wormhole-container {
     position: absolute;
     width: 150px;
     height: 150px;
     left: 50%;
     top: 80%;
-    transform: translate(-50%, -50%) scale(1);
-    transform-origin: center center;
-    z-index: 5;
+    transform: translate(-50%, -50%);
 }
 
 .wormhole-container::before {
@@ -454,45 +89,29 @@ body {
         rgba(69, 132, 255, 0.3) 0%,
         rgba(69, 132, 255, 0.2) 20%,
         rgba(149, 40, 253, 0.1) 40%,
-        rgba(20, 50, 120, 0.05) 60%,
         transparent 100%);
-    z-index: -1;
-    pointer-events: none;
     animation: pulseGlow 4s ease-in-out infinite;
 }
 
 @keyframes pulseGlow {
-    0%, 100% {
-        opacity: 0.8;
-        transform: translate(-50%, -50%) scale(1);
-    }
-    50% {
-        opacity: 1;
-        transform: translate(-50%, -50%) scale(1.1);
-    }
+    0%, 100% { opacity: 0.8; transform: translate(-50%, -50%) scale(1); }
+    50% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
 }
 
 .wormhole-container img {
     width: 100%;
     height: 100%;
-    display: block;
     position: relative;
-    z-index: 1;
 }
 
-/* ============================================
-   MODULE: EMOJI STREAM
-   ============================================ */
+/* Emoji Stream */
 .emoji {
     position: absolute;
     font-size: 54px;
     user-select: none;
-    pointer-events: auto;
     cursor: pointer;
     z-index: 100;
-    transform-origin: center;
     filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
-    transition: none;
 }
 
 .emoji.bot {
@@ -501,36 +120,12 @@ body {
     cursor: crosshair;
 }
 
-.emoji.bot.escaping {
-    animation: botEscape 0.5s ease;
-}
-
-@keyframes botEscape {
-    0% { transform: translate(-50%, -50%) scale(1) rotate(0deg); }
-    50% { transform: translate(-50%, -50%) scale(1.2) rotate(180deg); }
-    100% { transform: translate(-50%, -50%) scale(0) rotate(360deg); }
-}
-
-.emoji.sucked {
-    z-index: 101;
-    pointer-events: none;
-    cursor: default;
-}
-
-.emoji.escaping {
-    opacity: 0.5;
-    pointer-events: none;
-    cursor: default;
-}
-
 .emoji.fuel {
     filter: drop-shadow(0 0 15px #00ff88) drop-shadow(0 0 25px #00ddff);
     font-size: 60px;
 }
 
-/* Pick mode specific styles */
 .emoji.choice {
-    transition: all 0.4s ease;
     filter: drop-shadow(0 0 20px rgba(255, 200, 0, 0.5));
     animation: floatChoice 3s ease-in-out infinite;
 }
@@ -540,112 +135,46 @@ body {
     filter: drop-shadow(0 0 30px rgba(255, 200, 0, 0.8));
 }
 
-.emoji.fading {
-    opacity: 0;
-    transform: translate(-50%, -50%) scale(0.5);
-    pointer-events: none;
-    transition: all 0.6s ease-out !important;
-}
-
 @keyframes floatChoice {
-    0%, 100% { transform: translate(-50%, -50%) translateY(0) translateX(0) scale(1); }
-    25% { transform: translate(-50%, -50%) translateY(-8px) translateX(-3px) scale(1.03); }
-    50% { transform: translate(-50%, -50%) translateY(-10px) translateX(0) scale(1.05); }
-    75% { transform: translate(-50%, -50%) translateY(-8px) translateX(3px) scale(1.03); }
+    0%, 100% { transform: translate(-50%, -50%) translateY(0) scale(1); }
+    50% { transform: translate(-50%, -50%) translateY(-10px) scale(1.05); }
 }
 
-/* ============================================
-   MODULE: PARTICLE EFFECTS
-   ============================================ */
+.emoji.sucked { pointer-events: none; }
+
+/* Particle Effects */
 .particle {
     position: fixed;
     width: 6px;
     height: 6px;
-    background: radial-gradient(circle, 
-        rgba(255, 255, 255, 1) 0%, 
-        rgba(149, 40, 253, 0.8) 40%, 
-        transparent 70%);
+    background: radial-gradient(circle, rgba(255, 255, 255, 1) 0%, rgba(149, 40, 253, 0.8) 40%, transparent 70%);
     border-radius: 50%;
     pointer-events: none;
     z-index: 10000;
-    box-shadow: 0 0 6px rgba(149, 40, 253, 1),
-                0 0 12px rgba(69, 132, 255, 0.8);
+    box-shadow: 0 0 6px rgba(149, 40, 253, 1), 0 0 12px rgba(69, 132, 255, 0.8);
 }
 
-/* ============================================
-   MODULE: CONTROLS PANEL
-   ============================================ */
+/* Simple Controls */
 .controls {
     position: fixed;
     top: 20px;
     right: 20px;
     background: rgba(20, 20, 30, 0.95);
-    padding: 20px;
+    padding: 15px;
     border-radius: 10px;
     color: white;
-    width: 280px;
+    width: 220px;
     backdrop-filter: blur(10px);
-    transition: all 0.3s ease;
-    max-height: 90vh;
-    overflow-y: auto;
-}
-
-.controls h3 {
-    margin: 0 0 15px;
-    color: #9528FD;
-    font-size: 16px;
-    background: linear-gradient(135deg, #9528FD, #4584FF);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    cursor: pointer;
-    user-select: none;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.controls h3::after {
-    content: '▼';
-    font-size: 12px;
-    color: #9528FD;
-    -webkit-text-fill-color: #9528FD;
-    transition: transform 0.3s ease;
-}
-
-.controls.collapsed {
-    background: rgba(20, 20, 30, 0.8);
-    padding: 10px;
-    width: auto;
-    border-radius: 8px;
-}
-
-.controls.collapsed h3 {
-    margin: 0;
-}
-
-.controls.collapsed h3 span {
-    display: none;
-}
-
-.controls.collapsed h3::after {
-    content: '▶';
-    font-size: 20px;
-}
-
-.controls.collapsed .control-group,
-.controls.collapsed .status {
-    display: none;
 }
 
 .control-group {
-    margin-bottom: 15px;
+    margin-bottom: 12px;
 }
 
 .control-group label {
     display: block;
     margin-bottom: 5px;
-    font-size: 13px;
+    font-size: 12px;
     color: #aaa;
 }
 
@@ -660,1446 +189,172 @@ input[type="range"] {
 
 input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
-    width: 16px;
-    height: 16px;
+    width: 14px;
+    height: 14px;
     border-radius: 50%;
     background: white;
     cursor: pointer;
 }
 
-input[type="range"]::-moz-range-thumb {
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    background: white;
-    cursor: pointer;
-    border: none;
-}
-
-input[type="number"] {
+.mode-btn {
     width: 100%;
-    padding: 8px;
-    background: rgba(0, 0, 0, 0.5);
-    border: 1px solid #9528FD;
-    border-radius: 4px;
-    color: white;
-    font-size: 14px;
-    font-family: system-ui, -apple-system, sans-serif;
-}
-
-textarea {
-    width: 100%;
-    padding: 8px;
-    background: rgba(0, 0, 0, 0.5);
-    border: 1px solid #9528FD;
-    border-radius: 4px;
-    color: white;
-    font-size: 18px;
-    line-height: 1.5;
-    font-family: system-ui, -apple-system, sans-serif;
-    resize: vertical;
-    min-height: 50px;
-}
-
-.value {
-    color: #4584FF;
-    font-weight: bold;
-}
-
-.status {
-    margin-top: 10px;
-    padding-top: 10px;
-    border-top: 1px solid rgba(255,255,255,0.1);
-    font-size: 11px;
-    color: #666;
-}
-
-/* Mode toggle button styles */
-.mode-toggle-btn {
-    width: 100%;
-    padding: 12px;
+    padding: 10px;
     background: linear-gradient(135deg, #00ff88 0%, #00ddff 100%);
     border: none;
     border-radius: 6px;
     color: #000;
-    font-size: 15px;
+    font-size: 14px;
     cursor: pointer;
-    transition: all 0.3s ease;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 1px;
-    box-shadow: 0 4px 15px rgba(0, 255, 136, 0.3);
 }
 
-.mode-toggle-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0, 255, 136, 0.4);
-}
-
-.mode-toggle-btn.mode-out {
-    background: linear-gradient(135deg, #ff6b6b 0%, #ffd93d 100%);
-    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
-}
-
-.mode-toggle-btn.mode-out:hover {
-    box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
-}
-
-.mode-toggle-btn.mode-pick {
-    background: linear-gradient(135deg, #9528FD 0%, #4584FF 100%);
-    box-shadow: 0 4px 15px rgba(149, 40, 253, 0.3);
-}
-
-.mode-toggle-btn.mode-pick:hover {
-    box-shadow: 0 6px 20px rgba(149, 40, 253, 0.4);
-}
-
-.mode-toggle-btn.mode-invasion {
-    background: linear-gradient(135deg, #ff3333 0%, #ff8800 100%);
-    box-shadow: 0 4px 15px rgba(255, 51, 51, 0.3);
-}
-
-.mode-toggle-btn.mode-invasion:hover {
-    box-shadow: 0 6px 20px rgba(255, 51, 51, 0.4);
-}
-
-.timer-control-btn {
-    width: 48%;
-    padding: 10px;
-    border: none;
-    border-radius: 6px;
-    font-size: 14px;
+.toggle-btn {
+    width: 100%;
+    padding: 8px;
+    background: rgba(69, 132, 255, 0.3);
+    border: 1px solid #4584FF;
+    border-radius: 4px;
+    color: white;
+    font-size: 12px;
     cursor: pointer;
-    transition: all 0.3s ease;
-    font-weight: 600;
-    text-transform: uppercase;
+    margin-top: 5px;
 }
 
-.timer-control-btn.start {
-    background: linear-gradient(135deg, #00ff88 0%, #00ddff 100%);
-    color: #000;
+.toggle-btn.active {
+    background: rgba(0, 255, 136, 0.3);
+    border-color: #00ff88;
 }
 
-.timer-control-btn.reset {
-    background: linear-gradient(135deg, #ff6b6b 0%, #ffd93d 100%);
-    color: #000;
-}
-
-.timer-controls-row {
-    display: flex;
-    gap: 4%;
-    margin-top: 10px;
-}
+.value { color: #4584FF; font-weight: bold; }
 </style>
 </head>
 <body>
 <div id="scene">
-    <!-- All modules will be dynamically added here -->
+    <!-- Progress Meter -->
+    <div class="progress-meter">
+        <div class="progress-circle">
+            <svg>
+                <defs>
+                    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#9528FD;stop-opacity:1" />
+                        <stop offset="50%" style="stop-color:#4584FF;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#00DDFF;stop-opacity:1" />
+                    </linearGradient>
+                </defs>
+                <circle class="bg-circle" cx="30" cy="30" r="25"/>
+                <circle class="progress-circle-fill" cx="30" cy="30" r="25"/>
+            </svg>
+            <div class="rocket-center">🚀</div>
+        </div>
+    </div>
+
+    <!-- Wormhole -->
+    <div class="wormhole-container" id="wormhole">
+        <img src="https://storage.googleapis.com/smiletime-dev-cdn-assets/assets/OrbitPrototype/wormholeLooping.gif" alt="Wormhole">
+    </div>
 </div>
 
-<!-- Game Over Screen -->
-<div class="game-over-screen" id="gameOverScreen">
-    <div class="game-over-text">GAME OVER</div>
-    <button class="restart-button" id="restartButton">RESTART</button>
-</div>
-
-<!-- Control Panel HTML (kept separate for clarity) -->
-<div class="controls" id="controls">
-    <h3><span>🌀 Wormhole Controls</span></h3>
-    <div class="control-content">
-        <!-- Controls will be dynamically added -->
+<!-- Controls -->
+<div class="controls">
+    <div class="control-group">
+        <button id="modeBtn" class="mode-btn">MODE: 🌀 SUCK</button>
+    </div>
+    
+    <div class="control-group">
+        <label>Fuel Emojis (20% boost)</label>
+        <button id="fuelToggle" class="toggle-btn active">FUEL: ON</button>
+    </div>
+    
+    <div class="control-group">
+        <label>X Position: <span id="xValue" class="value">50</span>%</label>
+        <input type="range" id="xSlider" min="20" max="80" value="50">
+    </div>
+    
+    <div class="control-group">
+        <label>Y Position: <span id="yValue" class="value">80</span>%</label>
+        <input type="range" id="ySlider" min="50" max="90" value="80">
+    </div>
+    
+    <div class="control-group">
+        <label>Size: <span id="sizeValue" class="value">260</span>px</label>
+        <input type="range" id="sizeSlider" min="150" max="350" value="260">
     </div>
 </div>
 
 <script>
-// ============================================
-// MODULE: UserTile
-// Displays the user avatar/tile
-// ============================================
-class UserTile {
-    constructor(options = {}) {
-        this.config = {
-            imageUrl: options.imageUrl || 'https://storage.googleapis.com/smiletime-dev-cdn-assets/assets/OrbitPrototype/WhosHere.png',
-            position: options.position || { top: 30, left: 30 },
-            width: options.width || 180
-        };
-        this.element = null;
-    }
+// Configuration
+const CONFIG = {
+    mode: 'in',
+    emojis: ['🎲', '♥️', '🃏', '♠️', '🧩', '🥳', '♣️', '♦️', '🎯', '⭐', '🎨', '🤥', '👽', '👾', '💎'],
+    fuelEmojis: ['⚡', '🔥'],
+    botEmoji: '🤖',
+    fuelEnabled: true,
+    wormhole: { x: 50, y: 80, size: 260, gravity: 258 },
+    spawnRate: 1200,
+    emissionRange: 40,
+    progress: 0
+};
 
-    create() {
-        this.element = document.createElement('div');
-        this.element.className = 'user-tile';
-        this.element.style.top = `${this.config.position.top}px`;
-        this.element.style.left = `${this.config.position.left}px`;
-        this.element.style.width = `${this.config.width}px`;
-
-        const img = document.createElement('img');
-        img.src = this.config.imageUrl;
-        img.alt = 'User Tile';
-        
-        this.element.appendChild(img);
-        return this.element;
-    }
-
-    getPosition() {
-        if (!this.element) return null;
-        const rect = this.element.getBoundingClientRect();
-        return {
-            x: rect.left + rect.width / 2,
-            y: rect.top + rect.height / 2,
-            width: rect.width,
-            height: rect.height
-        };
-    }
-}
-
-// ============================================
-// MODULE: ProgressMeter
-// Circular progress meter with rocket
-// ============================================
+// Progress Meter
 class ProgressMeter {
-    constructor(options = {}) {
-        this.config = {
-            position: options.position || { top: 25, left: 165 },
-            onFull: options.onFull || (() => {}),
-            startValue: options.startValue || 0
-        };
-        this.element = null;
-        this.progress = this.config.startValue;
-        this.isSimpleMode = true; // Changed to true for default simple mode
+    constructor() {
+        this.progress = 0;
+        this.circle = document.querySelector('.progress-circle-fill');
     }
-
-    create() {
-        this.element = document.createElement('div');
-        this.element.className = 'progress-meter simple'; // Added 'simple' class for default
-        this.element.id = 'meter-container';
-        this.element.style.top = `${this.config.position.top}px`;
-        this.element.style.left = `${this.config.position.left}px`;
-
-        this.element.innerHTML = `
-            <div class="progress-circle">
-                <svg>
-                    <defs>
-                        <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" style="stop-color:#9528FD;stop-opacity:1" />
-                            <stop offset="50%" style="stop-color:#4584FF;stop-opacity:1" />
-                            <stop offset="100%" style="stop-color:#00DDFF;stop-opacity:1" />
-                        </linearGradient>
-                    </defs>
-                    <circle class="bg-circle" cx="30" cy="30" r="25"/>
-                    <circle class="progress-circle-fill" cx="30" cy="30" r="25"/>
-                </svg>
-                <div class="progress-text">
-                    <span id="meter-text">0%</span>
-                </div>
-                <div class="rocket-center">🚀</div>
-            </div>
-            <div class="rocket">🚀</div>
-        `;
-
-        return this.element;
-    }
-
-    updateProgress(percentage) {
-        this.progress = Math.max(0, Math.min(percentage, 100));
-        const circle = this.element.querySelector('.progress-circle-fill');
+    
+    update(value) {
+        const oldProgress = this.progress;
+        this.progress = Math.max(0, Math.min(100, value));
+        
+        if (oldProgress !== this.progress) {
+            console.log(`Progress: ${Math.floor(this.progress)}%`);
+        }
+        
         const circumference = 2 * Math.PI * 25;
         const offset = circumference - (this.progress / 100) * circumference;
-        circle.style.strokeDashoffset = offset;
-        
-        const text = this.element.querySelector('#meter-text');
-        text.textContent = Math.floor(this.progress) + '%';
-
-        // Visual feedback
-        this.element.classList.remove('impact');
-        void this.element.offsetWidth;
-        this.element.classList.add('impact');
-
-        // Check states
-        if (this.progress >= 90 && this.progress < 100) {
-            this.element.classList.add('almost-full');
-        } else {
-            this.element.classList.remove('almost-full');
-        }
-
-        if (this.progress >= 100) {
-            this.celebrate();
-        }
+        this.circle.style.strokeDashoffset = offset;
     }
-
-    addProgress(points) {
-        this.updateProgress(this.progress + points);
-    }
-
-    takeDamage(points) {
-        this.progress = Math.max(0, this.progress - points);
-        this.updateProgress(this.progress);
-        
-        // Visual damage feedback
-        this.element.classList.remove('damage');
-        void this.element.offsetWidth;
-        this.element.classList.add('damage');
-        
-        // Flash red briefly
-        const circle = this.element.querySelector('.progress-circle-fill');
-        const originalStroke = circle.style.stroke;
-        circle.style.stroke = '#ff3333';
-        setTimeout(() => {
-            circle.style.stroke = originalStroke || 'url(#gradient)';
-        }, 200);
-    }
-
-    celebrate() {
-        this.element.classList.remove('almost-full');
-        this.element.classList.add('celebrating');
-        
-        // Create celebration particles
-        const rect = this.element.getBoundingClientRect();
-        const centerX = rect.left + rect.width / 2;
-        const centerY = rect.top + rect.height / 2;
-        
-        for (let i = 0; i < 20; i++) {
-            const particle = document.createElement('div');
-            particle.style.cssText = `
-                position: fixed;
-                width: 6px;
-                height: 6px;
-                left: ${centerX}px;
-                top: ${centerY}px;
-                border-radius: 50%;
-                background: ${i % 2 ? '#00ff88' : '#00ddff'};
-                box-shadow: 0 0 10px ${i % 2 ? '#00ff88' : '#00ddff'};
-                pointer-events: none;
-                z-index: 10001;
-            `;
-            document.body.appendChild(particle);
-            
-            const angle = (Math.PI * 2 * i) / 20;
-            const distance = 50 + Math.random() * 30;
-            const endX = centerX + Math.cos(angle) * distance;
-            const endY = centerY + Math.sin(angle) * distance;
-            
-            setTimeout(() => {
-                particle.style.transition = 'all 800ms cubic-bezier(0.25, 0.46, 0.45, 0.94)';
-                particle.style.left = endX + 'px';
-                particle.style.top = endY + 'px';
-                particle.style.opacity = '0';
-                particle.style.transform = 'scale(2)';
-                setTimeout(() => particle.remove(), 800);
-            }, i * 30);
-        }
-        
-        setTimeout(() => {
-            this.element.classList.remove('celebrating');
-            this.progress = 0;
-            this.updateProgress(0);
-            this.config.onFull();
-        }, 2000);
-    }
-
-    reset() {
-        this.progress = 0;
-        this.updateProgress(0);
-        this.element.classList.remove('almost-full', 'celebrating', 'damage', 'impact');
-    }
-
-    toggleMode() {
-        this.isSimpleMode = !this.isSimpleMode;
-        if (this.isSimpleMode) {
-            this.element.classList.add('simple');
-        } else {
-            this.element.classList.remove('simple');
-        }
-        return this.isSimpleMode;
-    }
-
-    getPosition() {
-        if (!this.element) return null;
-        // Get the actual progress circle element, not the container
-        const circle = this.element.querySelector('.progress-circle');
-        const rect = circle.getBoundingClientRect();
-        return {
-            x: rect.left + rect.width / 2,
-            y: rect.top + rect.height / 2
-        };
-    }
+    
+    add(points) { this.update(this.progress + points); }
+    damage(points) { this.update(this.progress - points); }
+    reset() { this.update(0); }
 }
 
-// ============================================
-// MODULE: CountdownTimer
-// NASA-style countdown display
-// ============================================
-class CountdownTimer {
-    constructor(options = {}) {
-        this.config = {
-            position: options.position || { x: 50, y: 60 },
-            startTime: options.startTime || 60, // seconds
-            onExpire: options.onExpire || (() => {}),
-            wormhole: options.wormhole || null
-        };
-        this.element = null;
-        this.timeRemaining = this.config.startTime;
-        this.isRunning = false;
-        this.intervalId = null;
-    }
-
-    create() {
-        this.element = document.createElement('div');
-        this.element.className = 'countdown-timer';
-        this.updatePosition();
-
-        this.element.innerHTML = `
-            <div class="timer-display" id="timerDisplay">
-                <span id="timerMinutes">01</span>
-                <span class="timer-colon">:</span>
-                <span id="timerSeconds">00</span>
-            </div>
-        `;
-
-        this.updateDisplay();
-        return this.element;
-    }
-
-    updatePosition() {
-        if (!this.element) return;
-        
-        // Position relative to wormhole
-        const wormholePos = this.config.wormhole ? 
-            this.config.wormhole.config.position : 
-            { x: 50, y: 80 };
-        
-        // Place timer above wormhole
-        const xPos = (wormholePos.x / 100) * window.innerWidth;
-        const yPos = (wormholePos.y / 100) * window.innerHeight - 200;
-        
-        this.element.style.left = `${xPos}px`;
-        this.element.style.top = `${yPos}px`;
-        this.element.style.transform = 'translateX(-50%)';
-    }
-
-    start() {
-        if (this.isRunning) return;
-        
-        this.isRunning = true;
-        this.intervalId = setInterval(() => this.tick(), 1000);
-    }
-
-    stop() {
-        this.isRunning = false;
-        if (this.intervalId) {
-            clearInterval(this.intervalId);
-            this.intervalId = null;
-        }
-    }
-
-    reset() {
-        this.stop();
-        this.timeRemaining = this.config.startTime;
-        this.updateDisplay();
-    }
-
-    setTime(seconds) {
-        this.config.startTime = seconds;
-        this.timeRemaining = seconds;
-        this.updateDisplay();
-    }
-
-    tick() {
-        if (this.timeRemaining > 0) {
-            this.timeRemaining--;
-            this.updateDisplay();
-            
-            if (this.timeRemaining === 0) {
-                this.stop();
-                this.config.onExpire();
-            }
-        }
-    }
-
-    updateDisplay() {
-        if (!this.element) return;
-        
-        const minutes = Math.floor(this.timeRemaining / 60);
-        const seconds = this.timeRemaining % 60;
-        
-        const minutesEl = this.element.querySelector('#timerMinutes');
-        const secondsEl = this.element.querySelector('#timerSeconds');
-        const displayEl = this.element.querySelector('.timer-display');
-        
-        minutesEl.textContent = String(minutes).padStart(2, '0');
-        secondsEl.textContent = String(seconds).padStart(2, '0');
-        
-        // Update visual state based on time remaining
-        displayEl.classList.remove('warning', 'critical');
-        if (this.timeRemaining <= 10) {
-            displayEl.classList.add('critical');
-        } else if (this.timeRemaining <= 30) {
-            displayEl.classList.add('warning');
-        }
-    }
-}
-
-// ============================================
-// MODULE: RadialActivity
-// Circular activity visualization chart
-// ============================================
-class RadialActivity {
-    constructor(options = {}) {
-        this.config = {
-            position: options.position || { top: 30, left: 230 },
-            onCountChange: options.onCountChange || (() => {}),
-            maxSectors: 6
-        };
-        this.element = null;
-        this.canvas = null;
-        this.ctx = null;
-        this.counts = {};
-        this.sectors = [];
-        this.animationFrame = null;
-        this.pulseAnimations = new Map();
-        this.isVisible = true;
-    }
-
-    create() {
-        this.element = document.createElement('div');
-        this.element.className = 'radial-activity';
-        this.element.style.top = `${this.config.position.top}px`;
-        this.element.style.left = `${this.config.position.left}px`;
-
-        // Create canvas
-        this.canvas = document.createElement('canvas');
-        this.canvas.className = 'radial-canvas';
-        this.canvas.width = 100;
-        this.canvas.height = 100;
-        this.ctx = this.canvas.getContext('2d');
-        
-        this.element.appendChild(this.canvas);
-
-        this.startAnimation();
-
-        return this.element;
-    }
-
-    toggle() {
-        this.isVisible = !this.isVisible;
-        if (this.isVisible) {
-            this.element.classList.remove('hidden');
-        } else {
-            this.element.classList.add('hidden');
-        }
-        return this.isVisible;
-    }
-
-    increment(emoji) {
-        if (!this.counts[emoji]) {
-            this.counts[emoji] = 0;
-        }
-        this.counts[emoji]++;
-        
-        // Add pulse animation for this emoji
-        this.pulseAnimations.set(emoji, {
-            startTime: Date.now(),
-            duration: 300
-        });
-        
-        this.updateSectors();
-        this.updateDisplay();
-        this.config.onCountChange(emoji, this.counts[emoji], this.getTotal());
-    }
-
-    reset() {
-        this.counts = {};
-        this.sectors = [];
-        this.pulseAnimations.clear();
-        this.updateSectors();
-        this.updateDisplay();
-    }
-
-    updateSectors() {
-        // Get top N emojis by count
-        const sorted = Object.entries(this.counts)
-            .sort((a, b) => b[1] - a[1])
-            .slice(0, this.config.maxSectors);
-        
-        this.sectors = sorted.map(([emoji, count], index) => {
-            const angle = (Math.PI * 2 / Math.min(sorted.length, this.config.maxSectors));
-            const startAngle = -Math.PI / 2 + angle * index;
-            const endAngle = startAngle + angle;
-            
-            return {
-                emoji,
-                count,
-                startAngle,
-                endAngle,
-                percentage: count / Math.max(...sorted.map(s => s[1])),
-                index
-            };
-        });
-    }
-
-    updateDisplay() {
-        // Update emoji positions only (no total counter anymore)
-        this.updateEmojiPositions();
-    }
-
-    updateEmojiPositions() {
-        // Remove existing emoji elements
-        this.element.querySelectorAll('.radial-emoji').forEach(el => el.remove());
-        
-        this.sectors.forEach(sector => {
-            const midAngle = (sector.startAngle + sector.endAngle) / 2;
-            const radius = 42;  // Reduced from 85 to fit smaller size
-            const x = 50 + Math.cos(midAngle) * radius;
-            const y = 50 + Math.sin(midAngle) * radius;
-            
-            const emojiEl = document.createElement('div');
-            emojiEl.className = 'radial-emoji';
-            emojiEl.textContent = sector.emoji;
-            emojiEl.style.left = `${x}px`;
-            emojiEl.style.top = `${y}px`;
-            
-            // Add active class if pulsing
-            if (this.pulseAnimations.has(sector.emoji)) {
-                emojiEl.classList.add('active');
-            }
-            
-            this.element.appendChild(emojiEl);
-        });
-    }
-
-    drawChart() {
-        this.ctx.clearRect(0, 0, 100, 100);
-        const centerX = 50;
-        const centerY = 50;
-        const maxRadius = 35;  // Reduced from 70
-        
-        this.sectors.forEach(sector => {
-            const pulse = this.pulseAnimations.get(sector.emoji);
-            let pulseFactor = 0;
-            
-            if (pulse) {
-                const elapsed = Date.now() - pulse.startTime;
-                if (elapsed < pulse.duration) {
-                    const progress = elapsed / pulse.duration;
-                    pulseFactor = Math.sin(progress * Math.PI) * 0.15;
-                } else {
-                    this.pulseAnimations.delete(sector.emoji);
-                }
-            }
-            
-            // Calculate dynamic radius based on activity
-            const radius = 10 + (sector.percentage * 25) + (pulseFactor * maxRadius);
-            
-            // Create gradient for sector
-            const gradient = this.ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, maxRadius);
-            
-            // Color based on index for variety
-            const hues = [270, 200, 160, 120, 80, 40];
-            const hue = hues[sector.index % hues.length];
-            const brightness = 40 + sector.percentage * 30 + pulseFactor * 20;
-            
-            gradient.addColorStop(0, `hsla(${hue}, 100%, ${brightness}%, 0.1)`);
-            gradient.addColorStop(0.5, `hsla(${hue}, 100%, ${brightness}%, ${0.3 + sector.percentage * 0.3})`);
-            gradient.addColorStop(1, `hsla(${hue}, 100%, ${brightness + 10}%, ${0.6 + sector.percentage * 0.3})`);
-            
-            // Draw sector
-            this.ctx.beginPath();
-            this.ctx.moveTo(centerX, centerY);
-            this.ctx.arc(centerX, centerY, radius, sector.startAngle, sector.endAngle);
-            this.ctx.closePath();
-            
-            this.ctx.fillStyle = gradient;
-            this.ctx.fill();
-            
-            // Add glow effect for active sectors
-            if (sector.percentage > 0.5 || pulseFactor > 0) {
-                this.ctx.shadowBlur = 10 + pulseFactor * 15;
-                this.ctx.shadowColor = `hsla(${hue}, 100%, 60%, ${0.5 + pulseFactor})`;
-                this.ctx.fill();
-                this.ctx.shadowBlur = 0;
-            }
-            
-            // Draw sector border
-            this.ctx.strokeStyle = `hsla(${hue}, 100%, 60%, ${0.3 + sector.percentage * 0.4})`;
-            this.ctx.lineWidth = 0.5 + pulseFactor * 1;
-            this.ctx.stroke();
-        });
-    }
-
-    startAnimation() {
-        const animate = () => {
-            this.drawChart();
-            this.animationFrame = requestAnimationFrame(animate);
-        };
-        animate();
-    }
-
-    stopAnimation() {
-        if (this.animationFrame) {
-            cancelAnimationFrame(this.animationFrame);
-            this.animationFrame = null;
-        }
-    }
-
-    getTotal() {
-        return Object.values(this.counts).reduce((sum, count) => sum + count, 0);
-    }
-}
-
-// ============================================
-// MODULE: Wormhole
-// The gravitational center of the experience
-// ============================================
+// Wormhole
 class Wormhole {
-    constructor(options = {}) {
-        this.config = {
-            imageUrl: options.imageUrl || 'https://storage.googleapis.com/smiletime-dev-cdn-assets/assets/OrbitPrototype/wormholeLooping.gif',
-            position: options.position || { x: 50, y: 80 },
-            size: options.size || 260,
-            gravityStrength: options.gravityStrength || 258
-        };
-        this.element = null;
-    }
-
-    create() {
-        this.element = document.createElement('div');
-        this.element.className = 'wormhole-container';
-        this.element.id = 'wormhole';
-        
-        const img = document.createElement('img');
-        img.src = this.config.imageUrl;
-        img.alt = 'Wormhole';
-        
-        this.element.appendChild(img);
+    constructor() {
+        this.element = document.getElementById('wormhole');
         this.updatePosition();
         this.updateSize();
-        
-        return this.element;
     }
-
+    
     updatePosition() {
-        if (!this.element) return;
-        this.element.style.left = `${this.config.position.x}%`;
-        this.element.style.top = `${this.config.position.y}%`;
+        this.element.style.left = `${CONFIG.wormhole.x}%`;
+        this.element.style.top = `${CONFIG.wormhole.y}%`;
     }
-
+    
     updateSize() {
-        if (!this.element) return;
-        const scale = this.config.size / 150;
+        const scale = CONFIG.wormhole.size / 150;
         this.element.style.transform = `translate(-50%, -50%) scale(${scale})`;
     }
-
+    
     getCenter() {
-        if (!this.element) return null;
         const rect = this.element.getBoundingClientRect();
         return {
             x: rect.left + rect.width / 2,
             y: rect.top + rect.height / 2,
-            radius: (this.config.size / 150) * 75
+            radius: (CONFIG.wormhole.size / 150) * 75
         };
     }
 }
 
-// ============================================
-// MODULE: EmojiStream (ENHANCED WITH BOT INVASION)
-// Manages emoji spawning and physics for all modes
-// ============================================
-class EmojiStream {
-    constructor(options = {}) {
-        this.config = {
-            mode: options.mode || 'in', // 'in', 'out', 'pick', or 'invasion'
-            emojis: options.emojis || ['🎲', '♥️', '🃏', '♠️', '🧩', '🥳', '♣️', '♦️', '🎯', '⭐', '🎨', '🤥', '👽', '👾', '💎'],
-            fuelEmojis: options.fuelEmojis || ['⚡', '🔥'],
-            botEmoji: options.botEmoji || '🤖',
-            spawnRate: options.spawnRate || 1200,
-            emissionRange: options.emissionRange || 40,
-            orbitSpeed: options.orbitSpeed || 0.5,
-            floatSpeed: options.floatSpeed || 0.5,
-            regularValue: options.regularValue || 5,
-            fuelValue: options.fuelValue || 20,
-            botPenalty: options.botPenalty || 10, // How much progress is lost when bot reaches wormhole
-            onEmojiClick: options.onEmojiClick || (() => {}),
-            onBotEscape: options.onBotEscape || (() => {}),
-            wormhole: options.wormhole || null,
-            progressMeter: options.progressMeter || null
-        };
-        
-        this.emojis = [];
-        this.lastSpawnTime = 0;
-        this.lastBotSpawnTime = 0;
-        this.lastEmoji = null;
-        this.animationId = null;
-        this.scene = null;
-        this.isPaused = false;
-        
-        // Pick mode specific
-        this.activeChoices = [];
-        this.canSpawnChoices = true;
-        this.choiceCooldown = 2000; // 2 seconds between choice sets
-    }
-
-    init(scene) {
-        this.scene = scene;
-        this.startPhysics();
-        
-        // Initial spawns based on mode
-        if (this.config.mode === 'in' || this.config.mode === 'invasion') {
-            setTimeout(() => this.spawn(), 200 + Math.random() * 100);
-            setTimeout(() => this.spawn(), 800 + Math.random() * 200);
-            setTimeout(() => this.spawn(), 1400 + Math.random() * 300);
-        } else if (this.config.mode === 'out') {
-            setTimeout(() => this.spawn(), 500);
-            setTimeout(() => this.spawn(), 1000);
-            setTimeout(() => this.spawn(), 1500);
-        } else if (this.config.mode === 'pick') {
-            setTimeout(() => this.spawnChoices(), 500);
-        }
-    }
-
-    pause() {
-        this.isPaused = true;
-    }
-
-    resume() {
-        this.isPaused = false;
-    }
-
-    reset() {
-        // Clear all emojis
-        this.emojis.forEach(emoji => {
-            if (emoji.element && emoji.element.parentNode) {
-                emoji.element.remove();
-            }
-        });
-        this.emojis = [];
-        
-        // Clear any active choices
-        this.activeChoices.forEach(choice => {
-            if (choice.element && choice.element.parentNode) {
-                choice.element.remove();
-            }
-        });
-        this.activeChoices = [];
-        
-        // Reset state
-        this.lastSpawnTime = 0;
-        this.lastBotSpawnTime = 0;
-        this.lastEmoji = null;
-        this.canSpawnChoices = true;
-        this.isPaused = false;
-        
-        // Restart spawning
-        if (this.config.mode === 'pick') {
-            setTimeout(() => this.spawnChoices(), 500);
-        }
-    }
-
-    setMode(mode) {
-        this.config.mode = mode;
-        // Clear existing emojis when switching modes
-        this.emojis.forEach(emoji => {
-            emoji.element.remove();
-        });
-        this.emojis = [];
-        
-        // Clear any active choices
-        this.activeChoices.forEach(choice => {
-            if (choice.element && choice.element.parentNode) {
-                choice.element.remove();
-            }
-        });
-        this.activeChoices = [];
-        this.canSpawnChoices = true;
-        
-        // Reset spawn for new mode
-        if (mode === 'pick') {
-            setTimeout(() => this.spawnChoices(), 500);
-        }
-    }
-
-    // Calculate bot difficulty based on progress
-    getBotDifficulty() {
-        if (!this.config.progressMeter) return { speed: 1, frequency: 1, chaos: 0 };
-        
-        const progress = this.config.progressMeter.progress / 100;
-        
-        return {
-            speed: 1 + progress * 1.5,        // Bots get 150% faster at 100% progress
-            frequency: 1 + progress * 2,      // Spawn 3x more frequently at 100%
-            chaos: progress * 0.5,            // More erratic movement at higher progress
-            burstChance: progress * 0.3      // 30% chance of burst spawns at 100%
-        };
-    }
-
-    spawnBot() {
-        if (this.isPaused) return;
-        
-        const now = Date.now();
-        const difficulty = this.getBotDifficulty();
-        
-        const emoji = document.createElement('div');
-        emoji.className = 'emoji bot';
-        emoji.textContent = this.config.botEmoji;
-
-        // Bots spawn from left edge (like regular emojis)
-        const startX = -60;
-        const wormholeY = this.config.wormhole ? 
-            this.config.wormhole.config.position.y : 80;
-        const wormholeYPixels = (wormholeY / 100) * window.innerHeight;
-        const rangePixels = (this.config.emissionRange / 100) * window.innerHeight;
-        const minY = Math.max(50, wormholeYPixels - rangePixels);
-        const maxY = wormholeYPixels;
-        const startY = minY + Math.random() * (maxY - minY);
-
-        // Bots move faster based on difficulty
-        const baseSpeed = 2.5 * (0.8 + Math.random() * 0.4) * difficulty.speed;
-        
-        // Add chaos to movement
-        const chaosY = (Math.random() - 0.5) * difficulty.chaos;
-
-        const emojiData = {
-            element: emoji,
-            x: startX,
-            y: startY,
-            vx: baseSpeed,
-            vy: chaosY,
-            rotation: 0,
-            rotationSpeed: (Math.random() - 0.5) * 4,
-            scale: 1,
-            beingSucked: false,
-            suckStartTime: null,
-            age: 0,
-            isBot: true,
-            type: this.config.botEmoji
-        };
-
-        emoji.style.left = `${startX}px`;
-        emoji.style.top = `${startY}px`;
-        
-        emoji.onclick = (event) => {
-            event.stopPropagation();
-            if (emojiData.beingSucked || this.isPaused) return;
-            
-            const rect = emoji.getBoundingClientRect();
-            const centerX = rect.left + rect.width / 2;
-            const centerY = rect.top + rect.height / 2;
-            
-            // Destroy bot - no points, just prevent damage
-            this.config.onEmojiClick(emojiData, centerX, centerY);
-            
-            // Add escape animation
-            emoji.classList.add('escaping');
-            
-            setTimeout(() => {
-                const index = this.emojis.indexOf(emojiData);
-                if (index > -1) {
-                    this.emojis.splice(index, 1);
-                }
-                emoji.remove();
-            }, 500);
-        };
-        
-        this.scene.appendChild(emoji);
-        this.emojis.push(emojiData);
-        this.lastBotSpawnTime = now;
-    }
-
-    spawnChoices() {
-        if (!this.canSpawnChoices || this.activeChoices.length > 0 || this.isPaused) return;
-        
-        const wormholeCenter = this.config.wormhole ? 
-            this.config.wormhole.getCenter() : 
-            { x: window.innerWidth / 2, y: window.innerHeight * 0.8 };
-        
-        // Spawn 3 emojis at once
-        const chosenEmojis = [];
-        const allEmojis = [...this.config.emojis, ...this.config.fuelEmojis];
-        
-        // Pick 3 unique emojis
-        while (chosenEmojis.length < 3 && chosenEmojis.length < allEmojis.length) {
-            const emoji = allEmojis[Math.floor(Math.random() * allEmojis.length)];
-            if (!chosenEmojis.includes(emoji)) {
-                chosenEmojis.push(emoji);
-            }
-        }
-        
-        // Create the 3 choices with natural positions in upper-left quadrant
-        const positions = chosenEmojis.map((_, index) => {
-            // Wider spread in upper-left quadrant for better touch spacing
-            const baseAngle = Math.PI * 0.85 + (Math.PI * 0.35 * index / 2);
-            // Small random wobble for natural feel
-            const angleVariation = (Math.random() - 0.5) * 0.08;
-            // Greater distance variation and minimum spacing
-            const distance = 160 + index * 45 + Math.random() * 20;
-            
-            return {
-                angle: baseAngle + angleVariation,
-                distance: distance
-            };
-        });
-        
-        chosenEmojis.forEach((emojiText, index) => {
-            const emoji = document.createElement('div');
-            emoji.className = 'emoji choice';
-            emoji.textContent = emojiText;
-            
-            const isFuel = this.config.fuelEmojis.includes(emojiText);
-            if (isFuel) {
-                emoji.classList.add('fuel');
-            }
-            
-            // Calculate target position
-            const pos = positions[index];
-            const targetX = wormholeCenter.x + Math.cos(pos.angle) * pos.distance;
-            const targetY = wormholeCenter.y + Math.sin(pos.angle) * pos.distance;
-            
-            // Start at wormhole center
-            emoji.style.left = `${wormholeCenter.x}px`;
-            emoji.style.top = `${wormholeCenter.y}px`;
-            emoji.style.transform = 'translate(-50%, -50%) scale(0)';
-            emoji.style.opacity = '0';
-            
-            const emojiData = {
-                element: emoji,
-                x: wormholeCenter.x,
-                y: wormholeCenter.y,
-                targetX: targetX,
-                targetY: targetY,
-                scale: 0,
-                age: 0,
-                isFuel: isFuel,
-                value: isFuel ? this.config.fuelValue : this.config.regularValue,
-                type: emojiText,
-                isChoice: true,
-                selected: false
-            };
-            
-            emoji.onclick = (event) => {
-                event.stopPropagation();
-                if (emojiData.selected || this.isPaused) return;
-                
-                emojiData.selected = true;
-                const rect = emoji.getBoundingClientRect();
-                const centerX = rect.left + rect.width / 2;
-                const centerY = rect.top + rect.height / 2;
-                
-                // Handle the selection
-                this.config.onEmojiClick(emojiData, centerX, centerY);
-                
-                // Fade out the other choices
-                this.activeChoices.forEach(choice => {
-                    if (choice !== emojiData && choice.element) {
-                        choice.element.classList.add('fading');
-                        setTimeout(() => {
-                            if (choice.element.parentNode) {
-                                choice.element.remove();
-                            }
-                        }, 600);
-                    }
-                });
-                
-                // Remove selected emoji after a brief delay
-                setTimeout(() => {
-                    if (emoji.parentNode) {
-                        emoji.remove();
-                    }
-                }, 100);
-                
-                // Clear active choices and set cooldown
-                this.activeChoices = [];
-                this.canSpawnChoices = false;
-                
-                // Allow new choices after cooldown
-                setTimeout(() => {
-                    this.canSpawnChoices = true;
-                    if (this.config.mode === 'pick' && !this.isPaused) {
-                        this.spawnChoices();
-                    }
-                }, this.choiceCooldown);
-            };
-            
-            this.scene.appendChild(emoji);
-            this.activeChoices.push(emojiData);
-            
-            // Animate to position
-            setTimeout(() => {
-                emoji.style.transition = 'all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)';
-                emoji.style.left = `${targetX}px`;
-                emoji.style.top = `${targetY}px`;
-                emoji.style.transform = 'translate(-50%, -50%) scale(1)';
-                emoji.style.opacity = '1';
-                
-                setTimeout(() => {
-                    emoji.style.transition = '';
-                    emojiData.x = targetX;
-                    emojiData.y = targetY;
-                    emojiData.scale = 1;
-                }, 800);
-            }, 50 + index * 100); // Stagger the animations
-        });
-    }
-
-    spawn() {
-        if (this.isPaused) return;
-        
-        const now = Date.now();
-        // More variable cooldown - sometimes quick bursts, sometimes long waits
-        const variability = (this.config.mode === 'in' || this.config.mode === 'invasion') ? 0.85 : 0.7;
-        const cooldown = this.config.spawnRate * (variability + Math.random() * 0.6);
-        
-        if (now - this.lastSpawnTime < cooldown) {
-            return;
-        }
-
-        const emoji = document.createElement('div');
-        emoji.className = 'emoji';
-
-        // Fuel emojis are rarer and less predictable
-        const fuelChance = 0.08 + Math.random() * 0.04; // 8-12% chance
-        const isFuelEmoji = Math.random() < fuelChance && this.config.fuelEmojis.length > 0;
-        const emojiPool = isFuelEmoji ? this.config.fuelEmojis : this.config.emojis;
-        
-        let emojiChoice;
-        do {
-            emojiChoice = emojiPool[Math.floor(Math.random() * emojiPool.length)];
-        } while (emojiChoice === this.lastEmoji && emojiPool.length > 1);
-        this.lastEmoji = emojiChoice;
-
-        emoji.textContent = emojiChoice;
-        if (isFuelEmoji) {
-            emoji.classList.add('fuel');
-        }
-
-        let emojiData;
-
-        if (this.config.mode === 'in' || this.config.mode === 'invasion') {
-            // IN MODE: Spawn from left edge
-            const startX = -60;
-            const wormholeY = this.config.wormhole ? 
-                this.config.wormhole.config.position.y : 80;
-            const wormholeYPixels = (wormholeY / 100) * window.innerHeight;
-            const rangePixels = (this.config.emissionRange / 100) * window.innerHeight;
-            const minY = Math.max(50, wormholeYPixels - rangePixels);
-            const maxY = wormholeYPixels;
-            const startY = minY + Math.random() * (maxY - minY);
-
-            // Fuel emojis are 30-50% faster
-            const speedMultiplier = isFuelEmoji ? (1.3 + Math.random() * 0.2) : 1;
-            const baseSpeed = 2.5 * (0.7 + Math.random() * 0.6);
-
-            emojiData = {
-                element: emoji,
-                x: startX,
-                y: startY,
-                vx: baseSpeed * speedMultiplier,
-                vy: (Math.random() * 0.3 - 0.1) * (isFuelEmoji ? 1.5 : 1),
-                rotation: 0,
-                rotationSpeed: (Math.random() - 0.5) * 3 * (isFuelEmoji ? 2 : 1),
-                scale: 1,
-                beingSucked: false,
-                suckStartTime: null,
-                age: 0,
-                isFuel: isFuelEmoji,
-                value: isFuelEmoji ? this.config.fuelValue : this.config.regularValue,
-                type: emojiChoice
-            };
-
-            emoji.style.left = `${startX}px`;
-            emoji.style.top = `${startY}px`;
-        } else {
-            // OUT MODE: Spawn at wormhole center
-            const wormholeCenter = this.config.wormhole ? 
-                this.config.wormhole.getCenter() : 
-                { x: window.innerWidth / 2, y: window.innerHeight * 0.8 };
-
-            // Bias angle toward UP and LEFT
-            const baseAngle = Math.PI * 1.25; // 225 degrees (up-left diagonal)
-            // Fuel emojis have more erratic angles
-            const spread = isFuelEmoji ? Math.PI * 0.6 : Math.PI * 0.4;
-            const angle = baseAngle + (Math.random() - 0.5) * spread;
-            
-            // Fuel emojis shoot out 40-60% faster
-            const speedMultiplier = isFuelEmoji ? (1.4 + Math.random() * 0.2) : 1;
-            const speed = (2 + Math.random() * 2.5) * speedMultiplier;
-            
-            // Calculate velocities with additional upward bias
-            const vx = Math.cos(angle) * speed;
-            const vy = Math.sin(angle) * speed - 0.5;
-
-            emojiData = {
-                element: emoji,
-                x: wormholeCenter.x,
-                y: wormholeCenter.y,
-                vx: vx,
-                vy: vy,
-                rotation: 0,
-                rotationSpeed: (Math.random() - 0.5) * 5 * (isFuelEmoji ? 1.5 : 1),
-                scale: 0,
-                targetScale: 1,
-                age: 0,
-                beingSucked: false,
-                isFuel: isFuelEmoji,
-                value: isFuelEmoji ? this.config.fuelValue : this.config.regularValue,
-                type: emojiChoice
-            };
-
-            emoji.style.left = `${wormholeCenter.x}px`;
-            emoji.style.top = `${wormholeCenter.y}px`;
-            emoji.style.transform = 'translate(-50%, -50%) scale(0)';
-            emoji.style.opacity = '0';
-        }
-        
-        emoji.onclick = (event) => {
-            event.stopPropagation();
-            if (emojiData.beingSucked || this.isPaused) return;
-            
-            const rect = emoji.getBoundingClientRect();
-            const centerX = rect.left + rect.width / 2;
-            const centerY = rect.top + rect.height / 2;
-            
-            this.config.onEmojiClick(emojiData, centerX, centerY);
-            
-            const index = this.emojis.indexOf(emojiData);
-            if (index > -1) {
-                this.emojis.splice(index, 1);
-            }
-            
-            emoji.remove();
-        };
-        
-        this.scene.appendChild(emoji);
-        this.emojis.push(emojiData);
-        this.lastSpawnTime = now;
-    }
-
-    updatePhysics() {
-        // Don't update if paused
-        if (this.isPaused) {
-            this.animationId = requestAnimationFrame(() => this.updatePhysics());
-            return;
-        }
-        
-        // Handle spawning based on mode
-        if (this.config.mode === 'pick') {
-            // Pick mode handles its own spawning through spawnChoices
-            // Just update the floating animation for active choices
-            this.activeChoices.forEach(choice => {
-                choice.age++;
-            });
-        } else if (this.config.mode === 'invasion') {
-            // Bot Invasion mode - spawn both regular emojis and bots
-            const spawnChance = 0.012 + Math.random() * 0.008;
-            if (Math.random() < spawnChance * (1500 / this.config.spawnRate)) {
-                this.spawn();
-            }
-            
-            // Spawn bots based on difficulty
-            const difficulty = this.getBotDifficulty();
-            const botSpawnChance = 0.008 * difficulty.frequency;
-            
-            // Check for burst spawn at higher difficulties
-            if (difficulty.burstChance > 0 && Math.random() < difficulty.burstChance * 0.01) {
-                // Burst spawn 2-3 bots
-                const burstCount = 2 + Math.floor(Math.random() * 2);
-                for (let i = 0; i < burstCount; i++) {
-                    setTimeout(() => this.spawnBot(), i * 200);
-                }
-            } else if (Math.random() < botSpawnChance) {
-                this.spawnBot();
-            }
-        } else {
-            // Original spawning logic for 'in' and 'out' modes
-            const spawnChance = 0.012 + Math.random() * 0.008;
-            if (Math.random() < spawnChance * (1500 / this.config.spawnRate)) {
-                this.spawn();
-            }
-        }
-
-        const wormholeCenter = this.config.wormhole ? 
-            this.config.wormhole.getCenter() : null;
-
-        for (let i = this.emojis.length - 1; i >= 0; i--) {
-            const emoji = this.emojis[i];
-            
-            if (this.config.mode === 'in' || this.config.mode === 'invasion') {
-                // IN MODE PHYSICS (also used for invasion)
-                if (wormholeCenter) {
-                    const dx = wormholeCenter.x - emoji.x;
-                    const dy = wormholeCenter.y - emoji.y;
-                    const distance = Math.sqrt(dx * dx + dy * dy);
-
-                    if (emoji.beingSucked) {
-                        const suckDuration = 350;
-                        const elapsed = Date.now() - emoji.suckStartTime;
-                        const progress = Math.min(elapsed / suckDuration, 1);
-
-                        const easeIn = progress * progress;
-                        emoji.x += dx * easeIn * 0.5;
-                        emoji.y += dy * easeIn * 0.5;
-                        emoji.scale = Math.max(0, 1 - progress);
-                        emoji.rotation += 10 + progress * 20;
-
-                        if (progress >= 1 || emoji.scale <= 0.05) {
-                            // If this was a bot reaching the wormhole, damage the meter
-                            if (emoji.isBot && this.config.progressMeter) {
-                                this.config.progressMeter.takeDamage(this.config.botPenalty);
-                                this.config.onBotEscape(emoji);
-                            }
-                            
-                            emoji.element.remove();
-                            this.emojis.splice(i, 1);
-                            continue;
-                        }
-                    } else {
-                        if (distance < wormholeCenter.radius * 0.7) {
-                            emoji.beingSucked = true;
-                            emoji.suckStartTime = Date.now();
-                            emoji.element.classList.add('sucked');
-                            continue;
-                        }
-
-                        const minDistance = Math.max(distance, 30);
-                        const gravityStrength = this.config.wormhole.config.gravityStrength;
-                        const force = (gravityStrength * gravityStrength) / (minDistance * minDistance);
-                        
-                        emoji.vx += (dx / distance) * force * 0.02;
-                        emoji.vy += (dy / distance) * force * 0.025;
-
-                        if (distance < gravityStrength * 1.2) {
-                            const perpX = -dy / distance;
-                            const perpY = dx / distance;
-                            emoji.vx += perpX * force * 0.008;
-                            emoji.vy += perpY * force * 0.008;
-                            emoji.rotationSpeed += force * 0.15;
-                        }
-                        
-                        // Add extra chaos for bots at higher difficulties
-                        if (emoji.isBot && this.config.mode === 'invasion') {
-                            const difficulty = this.getBotDifficulty();
-                            emoji.vx += (Math.random() - 0.5) * difficulty.chaos;
-                            emoji.vy += (Math.random() - 0.5) * difficulty.chaos;
-                        }
-                    }
-                }
-
-                emoji.x += emoji.vx * this.config.orbitSpeed;
-                emoji.y += emoji.vy * this.config.orbitSpeed;
-                emoji.rotation += emoji.rotationSpeed;
-
-                // Update element
-                emoji.element.style.left = `${emoji.x}px`;
-                emoji.element.style.top = `${emoji.y}px`;
-                emoji.element.style.transform = `
-                    translate(-50%, -50%)
-                    rotate(${emoji.rotation}deg)
-                    scale(${emoji.scale})
-                `;
-            } else if (this.config.mode === 'out') {
-                // OUT MODE PHYSICS
-                emoji.age++;
-                
-                // Smooth emergence animation (first 30 frames)
-                let opacity = 1;
-                if (emoji.age < 30) {
-                    const progress = emoji.age / 30;
-                    emoji.scale = progress;
-                    opacity = progress;
-                    // Add initial spin during emergence
-                    emoji.rotation = progress * 360;
-                } else {
-                    emoji.scale = 1;
-                }
-                
-                // Float outward with slight acceleration
-                emoji.vx *= 1.002;
-                emoji.vy *= 1.002;
-                
-                // Add some waviness to movement
-                emoji.vx += Math.sin(emoji.age * 0.05) * 0.02;
-                emoji.vy += Math.cos(emoji.age * 0.05) * 0.02;
-                
-                // Update position
-                emoji.x += emoji.vx * this.config.floatSpeed;
-                emoji.y += emoji.vy * this.config.floatSpeed;
-                
-                // Continue rotation after emergence
-                if (emoji.age >= 30) {
-                    emoji.rotation += emoji.rotationSpeed;
-                }
-
-                // Update element
-                emoji.element.style.left = `${emoji.x}px`;
-                emoji.element.style.top = `${emoji.y}px`;
-                emoji.element.style.transform = `
-                    translate(-50%, -50%)
-                    rotate(${emoji.rotation}deg)
-                    scale(${emoji.scale})
-                `;
-                emoji.element.style.opacity = opacity;
-
-                // Check if off screen and mark for removal
-                const margin = 100;
-                if (emoji.x < -margin || emoji.x > window.innerWidth + margin ||
-                    emoji.y < -margin || emoji.y > window.innerHeight + margin) {
-                    
-                    // Mark as escaping (visual feedback)
-                    emoji.element.classList.add('escaping');
-                    
-                    // Remove after a short delay
-                    setTimeout(() => {
-                        if (emoji.element.parentNode) {
-                            emoji.element.remove();
-                        }
-                        const index = this.emojis.indexOf(emoji);
-                        if (index > -1) {
-                            this.emojis.splice(index, 1);
-                        }
-                    }, 300);
-                }
-            }
-
-            // Remove if out of bounds (for IN/INVASION mode)
-            if (this.config.mode === 'in' || this.config.mode === 'invasion') {
-                const margin = 200;
-                if (emoji.x < -margin || emoji.x > window.innerWidth + margin ||
-                    emoji.y < -margin || emoji.y > window.innerHeight + margin) {
-                    emoji.element.remove();
-                    this.emojis.splice(i, 1);
-                }
-            }
-        }
-
-        this.animationId = requestAnimationFrame(() => this.updatePhysics());
-    }
-
-    startPhysics() {
-        if (!this.animationId) {
-            this.updatePhysics();
-        }
-    }
-
-    stopPhysics() {
-        if (this.animationId) {
-            cancelAnimationFrame(this.animationId);
-            this.animationId = null;
-        }
-    }
-
-    getActiveCount() {
-        return this.emojis.length + this.activeChoices.length;
-    }
-}
-
-// ============================================
-// MODULE: ParticleEffects (Modified for bot destruction)
-// Handles explosion and particle animations
-// ============================================
-class ParticleEffects {
-    static createExplosion(x, y, isFuel = false, targetPos = null, onPointsReady = null, isBot = false) {
-        // Bot explosions are different - red particles, no points
+// Particle Effects
+class Particles {
+    static createExplosion(x, y, isFuel = false, targetPos = null, onReady = null, isBot = false) {
         if (isBot) {
-            const particleCount = 20;
-            for (let i = 0; i < particleCount; i++) {
+            // Red bot explosion
+            for (let i = 0; i < 20; i++) {
                 const particle = document.createElement('div');
                 particle.style.cssText = `
                     position: fixed;
@@ -2115,7 +370,7 @@ class ParticleEffects {
                 `;
                 document.body.appendChild(particle);
                 
-                const angle = (Math.PI * 2 * i) / particleCount;
+                const angle = (Math.PI * 2 * i) / 20;
                 const speed = 3 + Math.random() * 4;
                 const distance = speed * 20;
                 const endX = x + Math.cos(angle) * distance;
@@ -2133,54 +388,34 @@ class ParticleEffects {
             return;
         }
         
-        // Original explosion code for regular emojis
+        // Regular/fuel explosion with trails
         const particleCount = isFuel ? 35 : 25;
         const particles = [];
         const startTime = performance.now();
         let pointsAdded = false;
-        
-        // Easing functions
-        const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
-        const easeInQuad = (t) => t * t;
         
         for (let i = 0; i < particleCount; i++) {
             const particle = document.createElement('div');
             particle.className = 'particle';
             
             const isStreaker = Math.random() < 0.2;
-            const size = isStreaker ? 
-                4 + Math.random() * 6 : 
-                3 + Math.random() * 5;
+            const size = isStreaker ? 4 + Math.random() * 6 : 3 + Math.random() * 5;
             
             particle.style.width = size + 'px';
             particle.style.height = size + 'px';
             
-            // Color variations based on fuel vs regular
-            let hue, lightness, saturation;
-            if (isFuel) {
-                hue = isStreaker ? 15 + Math.random() * 30 : 30 + Math.random() * 30;
-                lightness = isStreaker ? 60 + Math.random() * 20 : 50 + Math.random() * 30;
-                saturation = 100;
-            } else {
-                hue = isStreaker ? 270 + Math.random() * 30 : 250 + Math.random() * 60;
-                lightness = isStreaker ? 60 + Math.random() * 30 : 50 + Math.random() * 30;
-                saturation = isStreaker ? 100 : 90 + Math.random() * 10;
-            }
+            const hue = isFuel ? 
+                (isStreaker ? 15 + Math.random() * 30 : 30 + Math.random() * 30) :
+                (isStreaker ? 270 + Math.random() * 30 : 250 + Math.random() * 60);
+            const lightness = isStreaker ? 60 + Math.random() * 20 : 50 + Math.random() * 30;
             
-            particle.style.background = `radial-gradient(circle, hsl(${hue}, ${saturation}%, ${lightness}%) 0%, transparent 60%)`;
-            particle.style.boxShadow = isStreaker ?
-                `0 0 ${size * 2}px hsla(${hue}, ${saturation}%, ${lightness}%, 0.6)` :
-                `0 0 ${size * 2}px hsla(${hue}, ${saturation}%, ${lightness}%, 0.5)`;
-            
-            particle.style.position = 'fixed';
+            particle.style.background = `radial-gradient(circle, hsl(${hue}, 100%, ${lightness}%) 0%, transparent 60%)`;
+            particle.style.boxShadow = `0 0 ${size * 2}px hsla(${hue}, 100%, ${lightness}%, 0.5)`;
             particle.style.left = x + 'px';
             particle.style.top = y + 'px';
-            particle.style.pointerEvents = 'none';
-            particle.style.zIndex = '10000';
             
             document.body.appendChild(particle);
             
-            // Golden angle for better distribution
             const goldenAngle = Math.PI * (3 - Math.sqrt(5));
             const angle = i * goldenAngle + (Math.random() - 0.5) * 0.3;
             const speed = isStreaker ? 5 + Math.random() * 4 : 3 + Math.random() * 3;
@@ -2201,9 +436,7 @@ class ParticleEffects {
                 isStreaker: isStreaker,
                 prevX: x,
                 prevY: y,
-                trail: null,
-                isFuelExplosion: isFuel,
-                hasImpacted: false
+                trail: null
             });
         }
         
@@ -2220,57 +453,41 @@ class ParticleEffects {
                     p.bornTime = elapsed;
                 }
                 
-                const particleAge = elapsed - p.bornTime;
-                
-                // Three-phase animation
+                const age = elapsed - p.bornTime;
                 const explodeDuration = 300;
                 const pauseDuration = 100;
                 const convergeDuration = 500;
                 const totalDuration = explodeDuration + pauseDuration + convergeDuration;
                 
-                if (particleAge < totalDuration) {
+                if (age < totalDuration) {
                     activeParticles = true;
                     
                     let x, y, scale, opacity;
                     
-                    // Phase 1: Explosion
-                    if (particleAge < explodeDuration) {
-                        const progress = easeOutCubic(particleAge / explodeDuration);
+                    if (age < explodeDuration) {
+                        // Explosion phase
+                        const progress = 1 - Math.pow(1 - age / explodeDuration, 3);
                         const distance = p.speed * 30 * progress;
-                        
                         x = p.startX + Math.cos(p.angle) * distance;
                         y = p.startY + Math.sin(p.angle) * distance;
                         scale = 1 + progress * 0.5;
                         opacity = 1;
-                        
-                    // Phase 2: Pause/Float
-                    } else if (particleAge < explodeDuration + pauseDuration) {
+                    } else if (age < explodeDuration + pauseDuration) {
+                        // Pause phase
                         const explodeDistance = p.speed * 30;
                         x = p.startX + Math.cos(p.angle) * explodeDistance;
                         y = p.startY + Math.sin(p.angle) * explodeDistance;
-                        
-                        const floatProgress = (particleAge - explodeDuration) / pauseDuration;
-                        x += Math.sin(floatProgress * Math.PI * 2) * 2;
-                        y += Math.cos(floatProgress * Math.PI * 2) * 1;
-                        
                         scale = 1.5;
                         opacity = 1;
-                        
-                    // Phase 3: Convergence with bezier curve
                     } else {
-                        const convergeProgress = easeInQuad(
-                            (particleAge - explodeDuration - pauseDuration) / convergeDuration
-                        );
-                        
+                        // Convergence phase
+                        const convergeProgress = Math.pow((age - explodeDuration - pauseDuration) / convergeDuration, 2);
                         const explodeDistance = p.speed * 30;
                         const explodeX = p.startX + Math.cos(p.angle) * explodeDistance;
                         const explodeY = p.startY + Math.sin(p.angle) * explodeDistance;
                         
-                        // Bezier curve control point
                         const midX = (explodeX + p.targetX) / 2;
                         const midY = explodeY - 50;
-                        
-                        // Quadratic bezier formula
                         const t = convergeProgress;
                         x = (1-t)*(1-t)*explodeX + 2*(1-t)*t*midX + t*t*p.targetX;
                         y = (1-t)*(1-t)*explodeY + 2*(1-t)*t*midY + t*t*p.targetY;
@@ -2278,7 +495,7 @@ class ParticleEffects {
                         scale = 1.5 * (1 - convergeProgress * 0.8);
                         opacity = convergeProgress < 0.7 ? 1 : 1 - ((convergeProgress - 0.7) / 0.3);
                         
-                        // Create trailing effect for streakers
+                        // Create trails for streakers
                         if (p.isStreaker && convergeProgress > 0.1) {
                             if (!p.trail) {
                                 p.trail = document.createElement('div');
@@ -2299,36 +516,17 @@ class ParticleEffects {
                             p.trail.style.left = (x - Math.cos(angle) * trailLength/2) + 'px';
                             p.trail.style.top = y + 'px';
                             p.trail.style.transform = `translate(-50%, -50%) rotate(${angle}rad)`;
-                            
-                            const trailHue = isFuel ? 45 + Math.random() * 15 : 270 + Math.random() * 20;
-                            p.trail.style.background = `linear-gradient(90deg, 
-                                transparent 0%, 
-                                ${isFuel ? 
-                                    'rgba(255, 200, 0, 0.2) 30%, rgba(255, 200, 0, 0.6) 70%' :
-                                    'rgba(149, 40, 253, 0.2) 30%, rgba(149, 40, 253, 0.6) 70%'
-                                },
-                                hsl(${trailHue}, 100%, 70%) 100%)`;
+                            p.trail.style.background = `linear-gradient(90deg, transparent 0%, ${isFuel ? 'rgba(255, 200, 0, 0.6)' : 'rgba(149, 40, 253, 0.6)'} 100%)`;
                             p.trail.style.filter = `blur(${p.size * 0.3}px)`;
                             p.trail.style.opacity = opacity;
                             
                             p.prevX = x;
                             p.prevY = y;
-                            
-                            // Enhanced glow as particles approach target
-                            p.element.style.filter = `brightness(${1.5 + convergeProgress * 0.5})`;
-                            p.element.style.boxShadow = `0 0 ${p.size * 4}px rgba(255, 255, 255, ${opacity * 0.8}), 0 0 ${p.size * 8}px ${isFuel ? '#ffaa00' : 'rgba(149, 40, 253, 1)'}`;
                         }
                         
-                        // Trigger points addition at 65% convergence
-                        if (!pointsAdded && convergeProgress > 0.65 && onPointsReady) {
+                        if (!pointsAdded && convergeProgress > 0.65 && onReady) {
                             pointsAdded = true;
-                            onPointsReady();
-                        }
-                        
-                        // Create impact burst when particles reach meter
-                        if (targetPos && y < targetPos.y + 10 && !p.hasImpacted && convergeProgress > 0.6) {
-                            p.hasImpacted = true;
-                            ParticleEffects.createImpactBurst(p.targetX, p.targetY, p.isFuelExplosion);
+                            onReady();
                         }
                     }
                     
@@ -2336,1213 +534,390 @@ class ParticleEffects {
                     p.element.style.top = y + 'px';
                     p.element.style.transform = `translate(-50%, -50%) scale(${scale})`;
                     p.element.style.opacity = opacity;
-                    
-                    p.x = x;
-                    p.y = y;
-                    
                 } else if (p.element.parentNode) {
                     p.element.remove();
-                    if (p.trail) {
-                        p.trail.remove();
-                    }
+                    if (p.trail) p.trail.remove();
                 }
             });
             
             if (activeParticles) {
                 requestAnimationFrame(animate);
-            } else {
-                particles.forEach(p => {
-                    if (p.element.parentNode) {
-                        p.element.remove();
-                    }
-                    if (p.trail) {
-                        p.trail.remove();
-                    }
-                });
             }
         }
         
         requestAnimationFrame(animate);
     }
-
-    static createImpactBurst(x, y, isFuel) {
-        const burst = document.createElement('div');
-        burst.style.cssText = `
-            position: fixed;
-            width: 30px;
-            height: 30px;
-            left: ${x}px;
-            top: ${y}px;
-            transform: translate(-50%, -50%);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 999;
-            border: 2px solid ${isFuel ? '#00ff88' : 'rgba(149, 40, 253, 0.8)'};
-            box-shadow: ${isFuel ? 
-                '0 0 20px #00ff88, 0 0 30px #00ddff' : 
-                '0 0 15px rgba(69, 132, 255, 0.6)'};
-        `;
-        
-        document.body.appendChild(burst);
-        
-        setTimeout(() => {
-            burst.style.transition = 'all 0.3s ease-out';
-            burst.style.width = '60px';
-            burst.style.height = '60px';
-            burst.style.opacity = '0';
-            setTimeout(() => burst.remove(), 300);
-        }, 10);
-    }
 }
 
-// ============================================
-// MODULE: GameManager
-// Handles game state and game over logic
-// ============================================
-class GameManager {
-    constructor(modules) {
-        this.modules = modules;
-        this.isGameOver = false;
-        this.gameOverScreen = document.getElementById('gameOverScreen');
-        this.restartButton = document.getElementById('restartButton');
-        
-        this.init();
-    }
-
-    init() {
-        this.restartButton.addEventListener('click', () => this.restart());
-    }
-
-    gameOver() {
-        if (this.isGameOver) return;
-        
-        this.isGameOver = true;
-        
-        // Stop timer
-        this.modules.timer.stop();
-        
-        // Pause emoji stream
-        this.modules.emojiStream.pause();
-        
-        // Show game over screen
-        this.gameOverScreen.classList.add('active');
-    }
-
-    restart() {
-        // Hide game over screen
-        this.gameOverScreen.classList.remove('active');
-        
-        // Reset game state
-        this.isGameOver = false;
-        
-        // Reset all modules
-        this.modules.progressMeter.reset();
-        this.modules.radialActivity.reset();
-        this.modules.emojiStream.reset();
-        this.modules.timer.reset();
-        
-        // Start timer
-        this.modules.timer.start();
-    }
-}
-
-// ============================================
-// MODULE: ControlPanel (Modified for Timer controls)
-// Settings and configuration UI
-// ============================================
-class ControlPanel {
-    constructor(modules) {
-        this.modules = modules;
-        this.element = document.getElementById('controls');
-        this.isCollapsed = false;
-        this.init();
-    }
-
-    init() {
-        const header = this.element.querySelector('h3');
-        header.addEventListener('click', () => this.toggle());
-        
-        const content = this.element.querySelector('.control-content');
-        content.innerHTML = this.generateControls();
-        this.attachEventListeners();
-    }
-
-    generateControls() {
-        const mode = this.modules.emojiStream.config.mode;
-        const modeEmoji = {
-            'in': '🌀',
-            'out': '✨',
-            'pick': '🎯',
-            'invasion': '🤖'
-        };
-        const modeName = {
-            'in': 'Suck',
-            'out': 'Blow',
-            'pick': 'Pick 1',
-            'invasion': 'Bot Invasion'
-        };
-        
-        return `
-            <div class="control-group">
-                <label>Wormhole Mode:</label>
-                <button id="modeToggle" class="mode-toggle-btn mode-${mode}">
-                    Mode: ${modeEmoji[mode]} ${modeName[mode]}
-                </button>
-            </div>
-
-            <div class="control-group">
-                <label>Timer (seconds): <span id="timerValue" class="value">60</span></label>
-                <input type="number" id="timerInput" min="10" max="300" value="60" step="10">
-                <div class="timer-controls-row">
-                    <button id="timerStart" class="timer-control-btn start">Start</button>
-                    <button id="timerReset" class="timer-control-btn reset">Reset</button>
-                </div>
-            </div>
-
-            <div class="control-group">
-                <label>Meter Style:</label>
-                <button id="meterToggle" style="
-                    width: 100%;
-                    padding: 10px;
-                    background: linear-gradient(135deg, #9528FD, #4584FF);
-                    border: none;
-                    border-radius: 6px;
-                    color: white;
-                    font-size: 14px;
-                    cursor: pointer;
-                    transition: all 0.3s ease;
-                    font-weight: 600;
-                ">Switch to Full Mode</button>
-            </div>
-
-            <div class="control-group">
-                <label>Activity Counter:</label>
-                <button id="counterToggle" style="
-                    width: 100%;
-                    padding: 10px;
-                    background: linear-gradient(135deg, #4584FF, #00DDFF);
-                    border: none;
-                    border-radius: 6px;
-                    color: white;
-                    font-size: 14px;
-                    cursor: pointer;
-                    transition: all 0.3s ease;
-                    font-weight: 600;
-                ">Hide Counter</button>
-            </div>
-
-            <div class="control-group">
-                <label>Custom Emojis:</label>
-                <textarea id="emojiInput">🎲,♥️,🃏,♠️,🧩,🥳,♣️,♦️,🎯,⭐,🎨,🤥,👽,👾,💎</textarea>
-                <div style="font-size: 11px; color: #888; margin-top: 3px;">
-                    Regular emojis (5% each) • <span id="emojiCount2" class="value">15</span> emojis
-                </div>
-            </div>
-
-            <div class="control-group">
-                <label>Fuel Emojis: <span style="color: #00ff88; font-size: 11px;">⚡ 20% each!</span></label>
-                <textarea id="fuelEmojiInput" style="min-height: 35px; border-color: #00ff88; box-shadow: 0 0 5px rgba(0, 255, 136, 0.3);">⚡,🔥</textarea>
-                <div style="font-size: 11px; color: #00ff88; margin-top: 3px;">
-                    Power-up emojis (20% each) • <span id="fuelEmojiCount" class="value">2</span> emojis
-                </div>
-            </div>
-
-            ${mode === 'invasion' ? `
-                <div class="control-group">
-                    <label>Bot Penalty: <span id="penaltyValue" class="value">10</span>%</label>
-                    <input type="range" id="botPenalty" min="5" max="25" value="10">
-                    <div style="font-size: 11px; color: #ff3333; margin-top: 3px;">
-                        Progress lost when bot reaches wormhole
-                    </div>
-                </div>
-            ` : ''}
-
-            <div class="control-group">
-                <label>X Position: <span id="xValue" class="value">50</span>%</label>
-                <input type="range" id="wormholeX" min="10" max="90" value="50">
-            </div>
-
-            <div class="control-group">
-                <label>Y Position: <span id="yValue" class="value">80</span>%</label>
-                <input type="range" id="wormholeY" min="10" max="90" value="80">
-            </div>
-
-            <div class="control-group">
-                <label>Wormhole Size: <span id="sizeValue" class="value">260</span>px</label>
-                <input type="range" id="wormholeSize" min="75" max="300" value="260">
-            </div>
-
-            ${(mode === 'in' || mode === 'invasion') ? `
-                <div class="control-group">
-                    <label>Gravity Strength: <span id="gravityValue" class="value">258</span></label>
-                    <input type="range" id="gravity" min="200" max="500" value="258">
-                </div>
-
-                <div class="control-group">
-                    <label>Emission Range: <span id="emissionValue" class="value">40</span>%</label>
-                    <input type="range" id="emissionRange" min="10" max="50" step="5" value="40">
-                    <div style="font-size: 11px; color: #888; margin-top: 3px;">
-                        Spawn range above wormhole
-                    </div>
-                </div>
-
-                <div class="control-group">
-                    <label>Movement Speed: <span id="speedValue" class="value">0.5</span>x</label>
-                    <input type="range" id="orbitSpeed" min="0.5" max="2" step="0.1" value="0.5">
-                </div>
-            ` : mode === 'out' ? `
-                <div class="control-group">
-                    <label>Float Speed: <span id="speedValue" class="value">0.5</span>x</label>
-                    <input type="range" id="floatSpeed" min="0.5" max="3" step="0.1" value="0.5">
-                </div>
-            ` : mode === 'pick' ? `
-                <div class="control-group">
-                    <label>Choice Cooldown: <span id="cooldownValue" class="value">2</span>s</label>
-                    <input type="range" id="choiceCooldown" min="0.5" max="5" step="0.5" value="2">
-                    <div style="font-size: 11px; color: #888; margin-top: 3px;">
-                        Time between choice sets
-                    </div>
-                </div>
-            ` : ''}
-
-            ${mode !== 'pick' ? `
-                <div class="control-group">
-                    <label>Spawn Every: <span id="rateValue" class="value">1.2</span>s</label>
-                    <input type="range" id="spawnRate" min="0.3" max="5" step="0.1" value="1.2">
-                    <div style="font-size: 11px; color: #888; margin-top: 3px;">
-                        Controls emoji density
-                    </div>
-                </div>
-            ` : ''}
-
-            <div class="status">
-                Active Emojis: <span id="emojiCount" class="value">0</span>
-                ${mode === 'invasion' ? `<br>Progress: <span id="progressStatus" class="value">0%</span>` : ''}
-                <br>Timer: <span id="timerStatus" class="value">01:00</span>
-            </div>
-        `;
-    }
-
-    attachEventListeners() {
-        // Timer controls
-        document.getElementById('timerInput').addEventListener('input', (e) => {
-            const value = parseInt(e.target.value);
-            this.modules.timer.setTime(value);
-            document.getElementById('timerValue').textContent = value;
-        });
-
-        document.getElementById('timerStart').addEventListener('click', () => {
-            this.modules.timer.start();
-        });
-
-        document.getElementById('timerReset').addEventListener('click', () => {
-            this.modules.timer.reset();
-        });
-
-        // Mode toggle - cycles through all 4 modes now
-        document.getElementById('modeToggle').addEventListener('click', () => {
-            const modes = ['in', 'out', 'pick', 'invasion'];
-            const currentMode = this.modules.emojiStream.config.mode;
-            const currentIndex = modes.indexOf(currentMode);
-            const newMode = modes[(currentIndex + 1) % modes.length];
-            
-            this.modules.emojiStream.setMode(newMode);
-            window.wormholeMode = newMode; // Store globally for radial activity
-            
-            // Rebuild controls for the new mode
-            const content = this.element.querySelector('.control-content');
-            content.innerHTML = this.generateControls();
-            this.attachEventListeners();
-        });
-
-        // Meter toggle
-        document.getElementById('meterToggle').addEventListener('click', () => {
-            const isSimple = this.modules.progressMeter.toggleMode();
-            document.getElementById('meterToggle').textContent = 
-                isSimple ? 'Switch to Full Mode' : 'Switch to Simple Mode';
-        });
-
-        // Counter toggle
-        document.getElementById('counterToggle').addEventListener('click', () => {
-            const isVisible = this.modules.radialActivity.toggle();
-            document.getElementById('counterToggle').textContent = 
-                isVisible ? 'Hide Counter' : 'Show Counter';
-        });
-
-        // Emoji inputs
-        document.getElementById('emojiInput').addEventListener('input', (e) => {
-            const emojis = e.target.value.split(',').map(s => s.trim()).filter(s => s);
-            this.modules.emojiStream.config.emojis = emojis;
-            document.getElementById('emojiCount2').textContent = emojis.length;
-        });
-
-        document.getElementById('fuelEmojiInput').addEventListener('input', (e) => {
-            const emojis = e.target.value.split(',').map(s => s.trim()).filter(s => s);
-            this.modules.emojiStream.config.fuelEmojis = emojis;
-            document.getElementById('fuelEmojiCount').textContent = emojis.length;
-        });
-
-        // Bot penalty (for invasion mode)
-        if (this.modules.emojiStream.config.mode === 'invasion') {
-            document.getElementById('botPenalty')?.addEventListener('input', (e) => {
-                this.modules.emojiStream.config.botPenalty = parseInt(e.target.value);
-                document.getElementById('penaltyValue').textContent = e.target.value;
-            });
-        }
-
-        // Wormhole controls
-        document.getElementById('wormholeX').addEventListener('input', (e) => {
-            this.modules.wormhole.config.position.x = e.target.value;
-            document.getElementById('xValue').textContent = e.target.value;
-            this.modules.wormhole.updatePosition();
-            this.modules.timer.updatePosition(); // Update timer position too
-        });
-
-        document.getElementById('wormholeY').addEventListener('input', (e) => {
-            this.modules.wormhole.config.position.y = e.target.value;
-            document.getElementById('yValue').textContent = e.target.value;
-            this.modules.wormhole.updatePosition();
-            this.modules.timer.updatePosition(); // Update timer position too
-        });
-
-        document.getElementById('wormholeSize').addEventListener('input', (e) => {
-            this.modules.wormhole.config.size = e.target.value;
-            document.getElementById('sizeValue').textContent = e.target.value;
-            this.modules.wormhole.updateSize();
-        });
-
-        // Mode-specific controls
-        if (this.modules.emojiStream.config.mode === 'in' || this.modules.emojiStream.config.mode === 'invasion') {
-            document.getElementById('gravity')?.addEventListener('input', (e) => {
-                this.modules.wormhole.config.gravityStrength = parseFloat(e.target.value);
-                document.getElementById('gravityValue').textContent = e.target.value;
-            });
-
-            document.getElementById('emissionRange')?.addEventListener('input', (e) => {
-                this.modules.emojiStream.config.emissionRange = parseInt(e.target.value);
-                document.getElementById('emissionValue').textContent = e.target.value;
-            });
-
-            document.getElementById('orbitSpeed')?.addEventListener('input', (e) => {
-                this.modules.emojiStream.config.orbitSpeed = parseFloat(e.target.value);
-                document.getElementById('speedValue').textContent = e.target.value;
-            });
-        } else if (this.modules.emojiStream.config.mode === 'out') {
-            document.getElementById('floatSpeed')?.addEventListener('input', (e) => {
-                this.modules.emojiStream.config.floatSpeed = parseFloat(e.target.value);
-                document.getElementById('speedValue').textContent = e.target.value;
-            });
-        } else if (this.modules.emojiStream.config.mode === 'pick') {
-            document.getElementById('choiceCooldown')?.addEventListener('input', (e) => {
-                this.modules.emojiStream.choiceCooldown = parseFloat(e.target.value) * 1000;
-                document.getElementById('cooldownValue').textContent = e.target.value;
-            });
-        }
-
-        document.getElementById('spawnRate')?.addEventListener('input', (e) => {
-            this.modules.emojiStream.config.spawnRate = parseFloat(e.target.value) * 1000;
-            document.getElementById('rateValue').textContent = e.target.value;
-        });
-
-        // Update status
-        setInterval(() => {
-            document.getElementById('emojiCount').textContent = 
-                this.modules.emojiStream.getActiveCount();
-            
-            // Update progress status for invasion mode
-            if (this.modules.emojiStream.config.mode === 'invasion') {
-                const progressEl = document.getElementById('progressStatus');
-                if (progressEl) {
-                    progressEl.textContent = Math.floor(this.modules.progressMeter.progress) + '%';
-                }
-            }
-            
-            // Update timer status
-            const timerEl = document.getElementById('timerStatus');
-            if (timerEl) {
-                const minutes = Math.floor(this.modules.timer.timeRemaining / 60);
-                const seconds = this.modules.timer.timeRemaining % 60;
-                timerEl.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-            }
-        }, 100);
-    }
-
-    toggle() {
-        this.isCollapsed = !this.isCollapsed;
-        if (this.isCollapsed) {
-            this.element.classList.add('collapsed');
-        } else {
-            this.element.classList.remove('collapsed');
-        }
-    }
-}
-
-// ============================================
-// MAIN APPLICATION
-// Ties all modules together
-// ============================================
-class WormholeApp {
+// Emoji Stream
+class EmojiStream {
     constructor() {
-        this.modules = {};
-        this.scene = document.getElementById('scene');
+        this.emojis = [];
+        this.activeChoices = [];
+        this.lastSpawnTime = 0;
+        this.animationId = null;
+        this.init();
     }
-
+    
     init() {
-        // Set global mode (for tap counter title)
-        window.wormholeMode = 'in';
-
-        // Create user tile
-        this.modules.userTile = new UserTile();
-        this.scene.appendChild(this.modules.userTile.create());
-
-        // Create progress meter (starts in simple mode by default)
-        this.modules.progressMeter = new ProgressMeter({
-            onFull: () => console.log('Meter full!')
-        });
-        this.scene.appendChild(this.modules.progressMeter.create());
-
-        // Create radial activity visualization (replacing tap counter)
-        this.modules.radialActivity = new RadialActivity({
-            onCountChange: (emoji, count, total) => {
-                console.log(`${emoji}: ${count} (Total: ${total})`);
-            }
-        });
-        this.scene.appendChild(this.modules.radialActivity.create());
-
-        // Create wormhole
-        this.modules.wormhole = new Wormhole();
-        this.scene.appendChild(this.modules.wormhole.create());
-
-        // Create countdown timer
-        this.modules.timer = new CountdownTimer({
-            startTime: 60,
-            wormhole: this.modules.wormhole,
-            onExpire: () => {
-                this.modules.gameManager.gameOver();
-            }
-        });
-        this.scene.appendChild(this.modules.timer.create());
-
-        // Create emoji stream (starts in 'in' mode)
-        this.modules.emojiStream = new EmojiStream({
-            mode: 'in',
-            wormhole: this.modules.wormhole,
-            progressMeter: this.modules.progressMeter, // Pass the meter reference
-            onEmojiClick: (emojiData, x, y) => {
-                // Update radial activity (except for bots)
-                if (!emojiData.isBot) {
-                    this.modules.radialActivity.increment(emojiData.type);
-                }
-                
-                // Get meter position for particles to target
-                const meterPos = this.modules.progressMeter.getPosition();
-                
-                // Create explosion with streaking particles
-                if (emojiData.isBot) {
-                    // Bot destruction - no points, just red explosion
-                    ParticleEffects.createExplosion(x, y, false, null, null, true);
-                } else {
-                    // Regular emoji - give points
-                    ParticleEffects.createExplosion(x, y, emojiData.isFuel, meterPos, () => {
-                        // Add progress when particles visually reach the meter
-                        this.modules.progressMeter.addProgress(emojiData.value);
-                    });
-                }
-            },
-            onBotEscape: (botData) => {
-                // Visual/audio feedback when bot escapes into wormhole
-                console.log('Bot escaped! Damage taken!');
-            }
-        });
-        this.modules.emojiStream.init(this.scene);
-
-        // Create game manager
-        this.modules.gameManager = new GameManager(this.modules);
-
-        // Create control panel
-        this.modules.controlPanel = new ControlPanel(this.modules);
-
-        // Auto-start timer
-        this.modules.timer.start();
-    }
-}
-
-// ============================================
-// INITIALIZATION
-// ============================================
-document.addEventListener('DOMContentLoaded', () => {
-    const app = new WormholeApp();
-    app.init();
-});
-</script>
-<!-- PATCH AREA START -->
-<script id="live-patches">
-// Test: Stats Panel Integration
-// Adds clickable stats panel to progress meter
-
-// 1. Add CSS
-const statsStyle = document.createElement('style');
-statsStyle.textContent = `
-/* ============================================
-   MODULE: STATS PANEL (GREEN TERMINAL)
-   ============================================ */
-.stats-panel {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) scale(0.95);
-    background: #0a0f0a;
-    border: 2px solid #00ff00;
-    border-radius: 8px;
-    padding: 20px;
-    min-width: 320px;
-    z-index: 11000;
-    opacity: 0;
-    pointer-events: none;
-    transition: all 0.3s ease;
-    box-shadow: 
-        0 0 40px rgba(0, 255, 0, 0.3),
-        inset 0 0 40px rgba(0, 255, 0, 0.1),
-        0 4px 20px rgba(0, 0, 0, 0.8);
-    font-family: 'Courier New', monospace;
-    color: #00ff00;
-    overflow: hidden;
-}
-.stats-panel.active {
-    opacity: 1;
-    pointer-events: auto;
-    transform: translate(-50%, -50%) scale(1);
-}
-.stats-panel::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 2px,
-        rgba(0, 255, 0, 0.03) 2px,
-        rgba(0, 255, 0, 0.03) 4px
-    );
-    pointer-events: none;
-    animation: scanlines 8s linear infinite;
-}
-@keyframes scanlines {
-    0% { transform: translateY(0); }
-    100% { transform: translateY(10px); }
-}
-.stats-panel::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 100%;
-    background: linear-gradient(
-        180deg,
-        rgba(0, 255, 0, 0) 0%,
-        rgba(0, 255, 0, 0.02) 50%,
-        rgba(0, 255, 0, 0) 100%
-    );
-    pointer-events: none;
-    animation: flicker 0.15s infinite;
-}
-@keyframes flicker {
-    0% { opacity: 0.97; }
-    50% { opacity: 1; }
-    100% { opacity: 0.98; }
-}
-.stats-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid rgba(0, 255, 0, 0.3);
-}
-.stats-title {
-    font-size: 18px;
-    font-weight: bold;
-    text-transform: uppercase;
-    letter-spacing: 3px;
-    text-shadow: 
-        0 0 10px rgba(0, 255, 0, 0.8),
-        0 0 20px rgba(0, 255, 0, 0.4);
-}
-.stats-close {
-    width: 24px;
-    height: 24px;
-    background: transparent;
-    border: 1px solid #00ff00;
-    color: #00ff00;
-    cursor: pointer;
-    font-size: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s ease;
-    font-family: 'Courier New', monospace;
-}
-.stats-close:hover {
-    background: rgba(0, 255, 0, 0.1);
-    box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
-    transform: scale(1.1);
-}
-.stats-content {
-    position: relative;
-    z-index: 1;
-}
-.stat-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px 8px;
-    margin: 4px 0;
-    transition: all 0.2s ease;
-    border-radius: 4px;
-}
-.stat-row:hover {
-    background: rgba(0, 255, 0, 0.05);
-    padding-left: 12px;
-}
-.stat-row.primary {
-    font-size: 16px;
-    margin-bottom: 8px;
-}
-.stat-label {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 14px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-.stat-value {
-    font-weight: bold;
-    font-size: 16px;
-    text-shadow: 0 0 5px rgba(0, 255, 0, 0.6);
-}
-.stat-value.timer {
-    font-family: 'Courier New', monospace;
-    letter-spacing: 2px;
-}
-.xp-section {
-    margin-top: 20px;
-    padding-top: 15px;
-    border-top: 1px solid rgba(0, 255, 0, 0.3);
-}
-.xp-title {
-    font-size: 12px;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    margin-bottom: 10px;
-    opacity: 0.7;
-}
-.xp-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 8px 4px;
-    transition: all 0.2s ease;
-}
-.xp-row:hover {
-    background: rgba(0, 255, 0, 0.03);
-    transform: translateX(2px);
-}
-.xp-emoji {
-    font-size: 20px;
-    filter: drop-shadow(0 0 3px rgba(0, 255, 0, 0.5));
-}
-.xp-level {
-    font-size: 13px;
-    opacity: 0.9;
-}
-.progress-meter { cursor: pointer !important; }
-`;
-document.head.appendChild(statsStyle);
-
-// 2. Add StatsPanel class
-class StatsPanel {
-    constructor(options = {}) {
-        this.config = {
-            progressMeter: options.progressMeter || null,
-            position: options.position || { top: 50, left: 50 }
-        };
-        this.element = null;
-        this.isActive = false;
-        this.sessionStartTime = Date.now();
-        this.updateInterval = null;
-        this.xpLevels = {
-            hearts: 1,
-            spades: 1,
-            dominoes: 1,
-            crossword: 1,
-            popquiz: 1
-        };
-    }
-    create() {
-        this.element = document.createElement('div');
-        this.element.className = 'stats-panel';
-        this.element.id = 'statsPanel';
-        this.element.innerHTML = `
-            <div class="stats-header">
-                <div class="stats-title">SYSTEM STATUS</div>
-                <button class="stats-close">×</button>
-            </div>
-            <div class="stats-content">
-                <div class="stat-row primary">
-                    <div class="stat-label">
-                        <span>Days on Journey</span>
-                        <span>🚀</span>
-                    </div>
-                    <div class="stat-value timer" id="journeyTime">00:00:00</div>
-                </div>
-                <div class="stat-row primary">
-                    <div class="stat-label">
-                        <span>Fuel Remaining</span>
-                        <span>🔥</span>
-                    </div>
-                    <div class="stat-value" id="fuelRemaining">0%</div>
-                </div>
-                
-                <div class="xp-section">
-                    <div class="xp-title">— Experience Matrix —</div>
-                    <div class="xp-row">
-                        <span class="xp-emoji">❤️</span>
-                        <span class="xp-level">Level <span id="xpHearts">1</span></span>
-                    </div>
-                    <div class="xp-row">
-                        <span class="xp-emoji">♠️</span>
-                        <span class="xp-level">Level <span id="xpSpades">1</span></span>
-                    </div>
-                    <div class="xp-row">
-                        <span class="xp-emoji">🦴</span>
-                        <span class="xp-level">Level <span id="xpDominoes">1</span></span>
-                    </div>
-                    <div class="xp-row">
-                        <span class="xp-emoji">🧩</span>
-                        <span class="xp-level">Level <span id="xpCrossword">1</span></span>
-                    </div>
-                    <div class="xp-row">
-                        <span class="xp-emoji">❓</span>
-                        <span class="xp-level">Level <span id="xpPopquiz">1</span></span>
-                    </div>
-                </div>
-            </div>
-        `;
-        // Add close button handler
-        this.element.querySelector('.stats-close').addEventListener('click', () => {
-            this.hide();
-        });
-        // Click outside to close
-        this.element.addEventListener('click', (e) => {
-            if (e.target === this.element) {
-                this.hide();
-            }
-        });
-        document.body.appendChild(this.element);
-        return this.element;
-    }
-    show() {
-        if (this.isActive) return;
+        this.startPhysics();
         
-        this.isActive = true;
-        this.element.classList.add('active');
-        
-        // Start updating the timer
-        this.updateInterval = setInterval(() => this.updateStats(), 100);
-        this.updateStats(); // Initial update
-    }
-    hide() {
-        if (!this.isActive) return;
-        
-        this.isActive = false;
-        this.element.classList.remove('active');
-        
-        // Stop updating
-        if (this.updateInterval) {
-            clearInterval(this.updateInterval);
-            this.updateInterval = null;
+        // Initial spawns
+        if (CONFIG.mode === 'in' || CONFIG.mode === 'invasion') {
+            setTimeout(() => this.spawn(), 200);
+            setTimeout(() => this.spawn(), 800);
+            setTimeout(() => this.spawn(), 1400);
+        } else if (CONFIG.mode === 'out') {
+            setTimeout(() => this.spawn(), 500);
+            setTimeout(() => this.spawn(), 1000);
+        } else if (CONFIG.mode === 'pick') {
+            setTimeout(() => this.spawnChoices(), 500);
         }
     }
-    toggle() {
-        if (this.isActive) {
-            this.hide();
-        } else {
-            this.show();
-        }
-    }
-    updateStats() {
-        // Update journey time
-        const elapsed = Date.now() - this.sessionStartTime;
-        const totalSeconds = Math.floor(elapsed / 1000);
-        const days = Math.floor(totalSeconds / 86400);
-        const hours = Math.floor((totalSeconds % 86400) / 3600);
-        const minutes = Math.floor((totalSeconds % 3600) / 60);
-        const seconds = totalSeconds % 60;
-        
-        let timeString;
-        if (days > 0) {
-            timeString = `${days}d ${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-        } else {
-            timeString = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-        }
-        
-        document.getElementById('journeyTime').textContent = timeString;
-        
-        // Update fuel remaining (from progress meter)
-        if (this.config.progressMeter) {
-            const fuel = Math.floor(this.config.progressMeter.progress);
-            document.getElementById('fuelRemaining').textContent = `${fuel}%`;
-        }
-    }
-    resetSession() {
-        this.sessionStartTime = Date.now();
-        this.xpLevels = {
-            hearts: 1,
-            spades: 1,
-            dominoes: 1,
-            crossword: 1,
-            popquiz: 1
-        };
-        this.updateStats();
-    }
-}
-
-// 3. Create stats panel after DOM is ready
-setTimeout(() => {
-    const app = window.app || { modules: {} };
     
-    // Create stats panel
-    const statsPanel = new StatsPanel({
-        progressMeter: app.modules.progressMeter
-    });
-    statsPanel.create();
-    app.modules.statsPanel = statsPanel;
-    
-    // Add click handler to progress meter
-    const progressMeter = document.getElementById('meter-container');
-    if (progressMeter) {
-        progressMeter.style.cursor = 'pointer';
-        progressMeter.addEventListener('click', (e) => {
+    spawn() {
+        const now = Date.now();
+        const cooldown = CONFIG.spawnRate * (0.85 + Math.random() * 0.6);
+        
+        if (now - this.lastSpawnTime < cooldown) return;
+        
+        const emoji = document.createElement('div');
+        emoji.className = 'emoji';
+        
+        const isFuel = CONFIG.fuelEnabled && Math.random() < 0.1 && CONFIG.fuelEmojis.length > 0;
+        const pool = isFuel ? CONFIG.fuelEmojis : CONFIG.emojis;
+        emoji.textContent = pool[Math.floor(Math.random() * pool.length)];
+        
+        if (isFuel) emoji.classList.add('fuel');
+        
+        let emojiData;
+        
+        if (CONFIG.mode === 'in' || CONFIG.mode === 'invasion') {
+            // Spawn from left
+            const startX = -60;
+            const wormholeY = (CONFIG.wormhole.y / 100) * window.innerHeight;
+            const rangePixels = (CONFIG.emissionRange / 100) * window.innerHeight;
+            const startY = Math.max(50, wormholeY - rangePixels) + Math.random() * rangePixels;
+            
+            emojiData = {
+                element: emoji,
+                x: startX,
+                y: startY,
+                vx: (2 + Math.random()) * (isFuel ? 1.4 : 1),
+                vy: (Math.random() - 0.5) * 0.3,
+                rotation: 0,
+                rotationSpeed: (Math.random() - 0.5) * 3,
+                scale: 1,
+                beingSucked: false,
+                suckStartTime: null,
+                isFuel: isFuel,
+                value: isFuel ? 20 : 5
+            };
+            
+            emoji.style.left = `${startX}px`;
+            emoji.style.top = `${startY}px`;
+        } else {
+            // Spawn from wormhole center
+            const center = wormhole.getCenter();
+            const angle = Math.PI * 1.25 + (Math.random() - 0.5) * Math.PI * 0.5;
+            const speed = (2 + Math.random() * 2.5) * (isFuel ? 1.5 : 1);
+            
+            emojiData = {
+                element: emoji,
+                x: center.x,
+                y: center.y,
+                vx: Math.cos(angle) * speed,
+                vy: Math.sin(angle) * speed - 0.5,
+                rotation: 0,
+                rotationSpeed: (Math.random() - 0.5) * 5,
+                scale: 0,
+                age: 0,
+                isFuel: isFuel,
+                value: isFuel ? 20 : 5
+            };
+            
+            emoji.style.left = `${center.x}px`;
+            emoji.style.top = `${center.y}px`;
+            emoji.style.transform = 'translate(-50%, -50%) scale(0)';
+        }
+        
+        emoji.onclick = (e) => {
             e.stopPropagation();
-            statsPanel.toggle();
+            if (emojiData.beingSucked) return;
+            
+            const rect = emoji.getBoundingClientRect();
+            const x = rect.left + rect.width / 2;
+            const y = rect.top + rect.height / 2;
+            const meterPos = { x: 55, y: 55 };
+            
+            Particles.createExplosion(x, y, emojiData.isFuel, meterPos, () => {
+                progressMeter.add(emojiData.value);
+            });
+            
+            this.emojis.splice(this.emojis.indexOf(emojiData), 1);
+            emoji.remove();
+        };
+        
+        scene.appendChild(emoji);
+        this.emojis.push(emojiData);
+        this.lastSpawnTime = now;
+    }
+    
+    spawnBot() {
+        const emoji = document.createElement('div');
+        emoji.className = 'emoji bot';
+        emoji.textContent = CONFIG.botEmoji;
+        
+        const startX = -60;
+        const wormholeY = (CONFIG.wormhole.y / 100) * window.innerHeight;
+        const startY = wormholeY - Math.random() * 200;
+        
+        const emojiData = {
+            element: emoji,
+            x: startX,
+            y: startY,
+            vx: 3 + Math.random(),
+            vy: (Math.random() - 0.5) * 0.5,
+            rotation: 0,
+            rotationSpeed: (Math.random() - 0.5) * 4,
+            scale: 1,
+            beingSucked: false,
+            isBot: true
+        };
+        
+        emoji.style.left = `${startX}px`;
+        emoji.style.top = `${startY}px`;
+        
+        emoji.onclick = (e) => {
+            e.stopPropagation();
+            const rect = emoji.getBoundingClientRect();
+            Particles.createExplosion(rect.left + rect.width/2, rect.top + rect.height/2, false, null, null, true);
+            this.emojis.splice(this.emojis.indexOf(emojiData), 1);
+            emoji.remove();
+        };
+        
+        scene.appendChild(emoji);
+        this.emojis.push(emojiData);
+    }
+    
+    spawnChoices() {
+        if (this.activeChoices.length > 0) return;
+        
+        const center = wormhole.getCenter();
+        const chosen = [];
+        const pool = [...CONFIG.emojis, ...(CONFIG.fuelEnabled ? CONFIG.fuelEmojis : [])];
+        
+        while (chosen.length < 3 && chosen.length < pool.length) {
+            const emoji = pool[Math.floor(Math.random() * pool.length)];
+            if (!chosen.includes(emoji)) chosen.push(emoji);
+        }
+        
+        chosen.forEach((emojiText, i) => {
+            const emoji = document.createElement('div');
+            emoji.className = 'emoji choice';
+            emoji.textContent = emojiText;
+            
+            const isFuel = CONFIG.fuelEmojis.includes(emojiText);
+            if (isFuel) emoji.classList.add('fuel');
+            
+            const angle = Math.PI * 0.85 + (Math.PI * 0.35 * i / 2);
+            const distance = 160 + i * 45;
+            const targetX = center.x + Math.cos(angle) * distance;
+            const targetY = center.y + Math.sin(angle) * distance;
+            
+            emoji.style.left = `${center.x}px`;
+            emoji.style.top = `${center.y}px`;
+            emoji.style.transform = 'translate(-50%, -50%) scale(0)';
+            emoji.style.opacity = '0';
+            
+            const emojiData = {
+                element: emoji,
+                isFuel: isFuel,
+                value: isFuel ? 20 : 5
+            };
+            
+            emoji.onclick = (e) => {
+                e.stopPropagation();
+                const rect = emoji.getBoundingClientRect();
+                const meterPos = { x: 55, y: 55 };
+                
+                Particles.createExplosion(rect.left + rect.width/2, rect.top + rect.height/2, isFuel, meterPos, () => {
+                    progressMeter.add(emojiData.value);
+                });
+                
+                this.activeChoices.forEach(c => c.element.remove());
+                this.activeChoices = [];
+                
+                setTimeout(() => this.spawnChoices(), 2000);
+            };
+            
+            scene.appendChild(emoji);
+            this.activeChoices.push(emojiData);
+            
+            setTimeout(() => {
+                emoji.style.transition = 'all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)';
+                emoji.style.left = `${targetX}px`;
+                emoji.style.top = `${targetY}px`;
+                emoji.style.transform = 'translate(-50%, -50%) scale(1)';
+                emoji.style.opacity = '1';
+            }, 50 + i * 100);
         });
     }
     
-    // Hook into GameManager restart if it exists
-    if (app.modules.gameManager) {
-        const originalRestart = app.modules.gameManager.restart.bind(app.modules.gameManager);
-        app.modules.gameManager.restart = function() {
-            originalRestart();
-            statsPanel.resetSession();
-        };
+    updatePhysics() {
+        // Spawn logic
+        if (CONFIG.mode === 'pick') {
+            // Handled by spawnChoices
+        } else if (CONFIG.mode === 'invasion') {
+            if (Math.random() < 0.02) this.spawn();
+            if (Math.random() < 0.008) this.spawnBot();
+        } else {
+            if (Math.random() < 0.02) this.spawn();
+        }
+        
+        const center = wormhole.getCenter();
+        
+        for (let i = this.emojis.length - 1; i >= 0; i--) {
+            const emoji = this.emojis[i];
+            
+            if (CONFIG.mode === 'in' || CONFIG.mode === 'invasion') {
+                // Suck mode physics
+                const dx = center.x - emoji.x;
+                const dy = center.y - emoji.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                
+                if (emoji.beingSucked) {
+                    const elapsed = Date.now() - emoji.suckStartTime;
+                    const progress = Math.min(elapsed / 350, 1);
+                    
+                    emoji.x += dx * progress * progress * 0.5;
+                    emoji.y += dy * progress * progress * 0.5;
+                    emoji.scale = Math.max(0, 1 - progress);
+                    emoji.rotation += 10 + progress * 20;
+                    
+                    if (progress >= 1) {
+                        if (emoji.isBot) progressMeter.damage(10);
+                        emoji.element.remove();
+                        this.emojis.splice(i, 1);
+                        continue;
+                    }
+                } else {
+                    if (distance < center.radius * 0.7) {
+                        emoji.beingSucked = true;
+                        emoji.suckStartTime = Date.now();
+                        emoji.element.classList.add('sucked');
+                        continue;
+                    }
+                    
+                    const force = (CONFIG.wormhole.gravity * CONFIG.wormhole.gravity) / (distance * distance);
+                    emoji.vx += (dx / distance) * force * 0.02;
+                    emoji.vy += (dy / distance) * force * 0.025;
+                    
+                    if (distance < CONFIG.wormhole.gravity * 1.2) {
+                        emoji.vx += (-dy / distance) * force * 0.008;
+                        emoji.vy += (dx / distance) * force * 0.008;
+                    }
+                }
+                
+                emoji.x += emoji.vx * 0.5;
+                emoji.y += emoji.vy * 0.5;
+                emoji.rotation += emoji.rotationSpeed;
+                
+                emoji.element.style.left = `${emoji.x}px`;
+                emoji.element.style.top = `${emoji.y}px`;
+                emoji.element.style.transform = `translate(-50%, -50%) rotate(${emoji.rotation}deg) scale(${emoji.scale})`;
+            } else if (CONFIG.mode === 'out') {
+                // Blow mode physics
+                emoji.age = (emoji.age || 0) + 1;
+                
+                if (emoji.age < 30) {
+                    emoji.scale = emoji.age / 30;
+                    emoji.rotation = emoji.scale * 360;
+                } else {
+                    emoji.scale = 1;
+                    emoji.rotation += emoji.rotationSpeed;
+                }
+                
+                emoji.vx *= 1.002;
+                emoji.vy *= 1.002;
+                emoji.vx += Math.sin(emoji.age * 0.05) * 0.02;
+                emoji.vy += Math.cos(emoji.age * 0.05) * 0.02;
+                
+                emoji.x += emoji.vx * 0.5;
+                emoji.y += emoji.vy * 0.5;
+                
+                emoji.element.style.left = `${emoji.x}px`;
+                emoji.element.style.top = `${emoji.y}px`;
+                emoji.element.style.transform = `translate(-50%, -50%) rotate(${emoji.rotation}deg) scale(${emoji.scale})`;
+            }
+            
+            // Remove if off screen
+            if (emoji.x < -200 || emoji.x > window.innerWidth + 200 ||
+                emoji.y < -200 || emoji.y > window.innerHeight + 200) {
+                emoji.element.remove();
+                this.emojis.splice(i, 1);
+            }
+        }
+        
+        this.animationId = requestAnimationFrame(() => this.updatePhysics());
     }
-}, 100);
-
-// Fix: Connect stats panel to progress meter - Direct approach
-setInterval(() => {
-    // Get the actual progress value from the meter's display text
-    const meterText = document.getElementById('meter-text');
-    const fuelElement = document.getElementById('fuelRemaining');
     
-    if (meterText && fuelElement) {
-        // Copy the exact percentage from the meter display
-        const percentage = meterText.textContent;
-        fuelElement.textContent = percentage;
+    startPhysics() {
+        if (!this.animationId) this.updatePhysics();
     }
-}, 100);
-
-// Enhancement: Add XP progress bars to stats panel
-// Add new CSS for progress bars
-const xpBarStyles = document.createElement('style');
-xpBarStyles.textContent = `
-.xp-row {
-    display: block;
-    padding: 8px 4px;
-    margin-bottom: 12px;
-}
-.xp-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 4px;
-}
-.xp-emoji {
-    font-size: 20px;
-    filter: drop-shadow(0 0 3px rgba(0, 255, 0, 0.5));
-}
-.xp-level {
-    font-size: 12px;
-    opacity: 0.9;
-    font-family: 'Courier New', monospace;
-}
-.xp-progress-bar {
-    width: 100%;
-    height: 8px;
-    background: rgba(0, 40, 0, 0.8);
-    border: 1px solid rgba(0, 255, 0, 0.3);
-    border-radius: 2px;
-    overflow: hidden;
-    position: relative;
-    margin: 4px 0;
-}
-.xp-progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, #00ff00 0%, #00dd00 100%);
-    box-shadow: 0 0 10px rgba(0, 255, 0, 0.6);
-    transition: width 0.3s ease;
-    position: relative;
-}
-.xp-progress-fill::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    width: 2px;
-    background: #ffffff;
-    box-shadow: 0 0 5px #00ff00;
-    animation: pulse 1s ease-in-out infinite;
-}
-@keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.3; }
-}
-.xp-rank {
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    color: rgba(0, 255, 0, 0.6);
-    margin-top: 2px;
-}
-`;
-document.head.appendChild(xpBarStyles);
-
-// Update the XP section in existing stats panel
-setTimeout(() => {
-    const xpSection = document.querySelector('.xp-section');
-    if (xpSection) {
-        // Define rank names for different levels
-        const ranks = {
-            1: 'CADET',
-            2: 'ROOKIE',
-            3: 'PILOT',
-            4: 'NAVIGATOR',
-            5: 'CAPTAIN',
-            6: 'COMMANDER',
-            7: 'ADMIRAL',
-            8: 'LEGEND'
-        };
+    
+    reset() {
+        this.emojis.forEach(e => e.element.remove());
+        this.activeChoices.forEach(e => e.element.remove());
+        this.emojis = [];
+        this.activeChoices = [];
+        this.lastSpawnTime = 0;
         
-        // Define XP data with progress
-        const xpData = [
-            { emoji: '❤️', level: 1, progress: 35, rank: ranks[1] },
-            { emoji: '♠️', level: 1, progress: 60, rank: ranks[1] },
-            { emoji: '🦴', level: 2, progress: 20, rank: ranks[2] },
-            { emoji: '🧩', level: 1, progress: 80, rank: ranks[1] },
-            { emoji: '❓', level: 3, progress: 45, rank: ranks[3] }
-        ];
-        
-        // Build new HTML
-        let xpHTML = '<div class="xp-title">— EXPERIENCE MATRIX —</div>';
-        
-        xpData.forEach(item => {
-            xpHTML += `
-                <div class="xp-row">
-                    <div class="xp-header">
-                        <span class="xp-emoji">${item.emoji}</span>
-                        <span class="xp-level">LVL ${item.level}</span>
-                    </div>
-                    <div class="xp-progress-bar">
-                        <div class="xp-progress-fill" style="width: ${item.progress}%"></div>
-                    </div>
-                    <div class="xp-rank">${item.rank}</div>
-                </div>
-            `;
-        });
-        
-        xpSection.innerHTML = xpHTML;
+        if (CONFIG.mode === 'pick') {
+            setTimeout(() => this.spawnChoices(), 500);
+        }
     }
-}, 200);
+}
 
-// MOBILE-FOCUSED PATCH FOR iPAD/iPHONE - SMALLER EMOJIS
-// Optimized for tap gameplay
+// Initialize
+const scene = document.getElementById('scene');
+const progressMeter = new ProgressMeter();
+const wormhole = new Wormhole();
+const emojiStream = new EmojiStream();
 
-// 1. Timer positioning for mobile devices
-CountdownTimer.prototype.updatePosition = function() {
-    if (!this.element) return;
-    
-    const wormholePos = this.config.wormhole ? 
-        this.config.wormhole.config.position : 
-        { x: 50, y: 80 };
-    
-    // Timer stays "near" wormhole (above and slightly right)
-    const timerX = wormholePos.x + 5;  // 5% to the right
-    const timerY = Math.max(10, wormholePos.y - 15);  // 15% above
-    
-    this.element.style.position = 'fixed';
-    this.element.style.left = `${timerX}%`;
-    this.element.style.top = `${timerY}%`;
-    this.element.style.transform = 'translate(-50%, -50%)';
+// Controls
+document.getElementById('modeBtn').onclick = () => {
+    const modes = ['in', 'out', 'pick', 'invasion'];
+    const modeNames = { in: '🌀 SUCK', out: '✨ BLOW', pick: '🎯 PICK 1', invasion: '🤖 INVASION' };
+    const currentIndex = modes.indexOf(CONFIG.mode);
+    CONFIG.mode = modes[(currentIndex + 1) % modes.length];
+    document.getElementById('modeBtn').textContent = `MODE: ${modeNames[CONFIG.mode]}`;
+    emojiStream.reset();
 };
 
-// 2. Mobile-optimized styles with SMALLER emojis
-const mobileStyles = document.createElement('style');
-mobileStyles.textContent = `
-/* iPad/iPhone Optimizations */
-@media (max-width: 1024px) {
-    /* Smaller emojis for tap gameplay */
-    .emoji {
-        font-size: 44px !important;  /* Reduced from 60px */
-    }
-    
-    .emoji.fuel {
-        font-size: 48px !important;  /* Slightly larger for fuel */
-    }
-    
-    .emoji.bot {
-        font-size: 46px !important;  /* Bots slightly larger */
-    }
-    
-    /* Choice mode emojis can be a bit bigger since there's only 3 */
-    .emoji.choice {
-        font-size: 52px !important;
-    }
-    
-    /* Compact timer for mobile */
-    .countdown-timer {
-        padding: 8px 12px !important;
-        background: rgba(10, 10, 20, 0.9) !important;
-    }
-    
-    .timer-display {
-        font-size: 24px !important;
-        letter-spacing: 2px !important;
-    }
-    
-    /* Hide radial activity as requested */
-    .radial-activity {
-        display: none !important;
-    }
-    
-    /* Compact controls */
-    .controls {
-        max-width: 280px;
-        font-size: 13px;
-    }
-    
-    /* Touch-friendly buttons (minimum 44px Apple guideline) */
-    button {
-        min-height: 44px;
-    }
-    
-    /* Compact header elements */
-    .user-tile {
-        width: 120px;
-    }
-    
-    .progress-meter {
-        transform: scale(0.9);
-    }
-}
+document.getElementById('fuelToggle').onclick = (e) => {
+    CONFIG.fuelEnabled = !CONFIG.fuelEnabled;
+    e.target.classList.toggle('active');
+    e.target.textContent = `FUEL: ${CONFIG.fuelEnabled ? 'ON' : 'OFF'}`;
+};
 
-/* Even smaller on phones vs iPads */
-@media (max-width: 667px) {
-    .emoji {
-        font-size: 40px !important;  /* Even smaller for phones */
-    }
-    
-    .emoji.fuel {
-        font-size: 44px !important;
-    }
-    
-    .emoji.choice {
-        font-size: 48px !important;
-    }
-}
+document.getElementById('xSlider').oninput = (e) => {
+    CONFIG.wormhole.x = e.target.value;
+    document.getElementById('xValue').textContent = e.target.value;
+    wormhole.updatePosition();
+};
 
-/* Prevent iOS bounce and zoom */
-* {
-    touch-action: manipulation;
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-}
+document.getElementById('ySlider').oninput = (e) => {
+    CONFIG.wormhole.y = e.target.value;
+    document.getElementById('yValue').textContent = e.target.value;
+    wormhole.updatePosition();
+};
 
-/* Lock viewport */
-body, html {
-    overflow: hidden;
-    position: fixed;
-    width: 100%;
-    height: 100%;
-}
-`;
-document.head.appendChild(mobileStyles);
-
-// 3. Fix timer position after DOM loads
-setTimeout(() => {
-    const timerElement = document.querySelector('.countdown-timer');
-    if (timerElement) {
-        const wormholeElement = document.getElementById('wormhole');
-        if (wormholeElement) {
-            const wormholeLeft = parseFloat(wormholeElement.style.left) || 50;
-            const wormholeTop = parseFloat(wormholeElement.style.top) || 80;
-            
-            const timerX = wormholeLeft + 5;
-            const timerY = Math.max(10, wormholeTop - 15);
-            
-            timerElement.style.position = 'fixed';
-            timerElement.style.left = `${timerX}%`;
-            timerElement.style.top = `${timerY}%`;
-            timerElement.style.transform = 'translate(-50%, -50%)';
-        }
-    }
-    
-    // Auto-collapse controls on touch devices
-    if ('ontouchstart' in window) {
-        const controls = document.getElementById('controls');
-        if (controls) {
-            controls.classList.add('collapsed');
-        }
-    }
-}, 300);
-
-// 4. Handle slider updates
-document.addEventListener('DOMContentLoaded', () => {
-    const updateTimerPosition = () => {
-        const timerElement = document.querySelector('.countdown-timer');
-        const wormholeElement = document.getElementById('wormhole');
-        
-        if (timerElement && wormholeElement) {
-            const wormholeLeft = parseFloat(wormholeElement.style.left) || 50;
-            const wormholeTop = parseFloat(wormholeElement.style.top) || 80;
-            
-            timerElement.style.left = `${wormholeLeft + 5}%`;
-            timerElement.style.top = `${Math.max(10, wormholeTop - 15)}%`;
-        }
-    };
-    
-    ['wormholeX', 'wormholeY'].forEach(id => {
-        const slider = document.getElementById(id);
-        if (slider) {
-            slider.addEventListener('input', updateTimerPosition);
-        }
-    });
-});
-
-// [Keep your existing stats panel code as-is]
-
-// Connect stats panel to progress meter
-setInterval(() => {
-    const meterText = document.getElementById('meter-text');
-    const fuelElement = document.getElementById('fuelRemaining');
-    
-    if (meterText && fuelElement) {
-        fuelElement.textContent = meterText.textContent;
-    }
-}, 100);
+document.getElementById('sizeSlider').oninput = (e) => {
+    CONFIG.wormhole.size = e.target.value;
+    document.getElementById('sizeValue').textContent = e.target.value;
+    wormhole.updateSize();
+};
+</script>
 </body>
 </html>

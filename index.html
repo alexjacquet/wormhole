@@ -6,7 +6,7 @@
 <title>Wormhole Simplified</title>
 <script>
 // EDIT VERSION HERE
-const VERSION = "v002";
+const VERSION = "v004";
 </script>
 <style>
 body {
@@ -23,11 +23,11 @@ body {
     background: radial-gradient(ellipse at center, #000814 0%, #000511 40%, #000000 100%);
 }
 
-/* Progress Meter */
+/* Progress Meter - MOVED TO TOP RIGHT */
 .progress-meter {
     position: fixed;
     top: 25px;
-    left: 25px;
+    right: 25px;
     z-index: 1001;
     width: 60px;
     height: 60px;
@@ -159,11 +159,11 @@ body {
     box-shadow: 0 0 6px rgba(149, 40, 253, 1), 0 0 12px rgba(69, 132, 255, 0.8);
 }
 
-/* Simple Controls */
+/* Simple Controls - MOVED TO TOP LEFT */
 .controls {
     position: fixed;
     top: 20px;
-    right: 20px;
+    left: 20px;
     background: rgba(20, 20, 30, 0.95);
     padding: 15px;
     border-radius: 10px;
@@ -280,7 +280,7 @@ input[type="range"]::-webkit-slider-thumb {
 </head>
 <body>
 <div id="scene">
-    <!-- Progress Meter -->
+    <!-- Progress Meter - NOW ON RIGHT SIDE -->
     <div class="progress-meter">
         <div class="progress-circle">
             <svg>
@@ -304,7 +304,7 @@ input[type="range"]::-webkit-slider-thumb {
     </div>
 </div>
 
-<!-- Controls -->
+<!-- Controls - NOW ON LEFT SIDE -->
 <div class="controls" id="controls">
     <div class="control-header">
         <span class="version-text" id="versionText"></span>
@@ -350,7 +350,7 @@ const CONFIG = {
     botEmoji: '🤖',
     fuelEnabled: true,
     wormhole: { x: 50, y: 80, size: 260, gravity: 258 },
-    spawnRate: 1200,
+    spawnRate: 900,
     emissionRange: 40,
     progress: 0
 };
@@ -707,7 +707,14 @@ class EmojiStream {
             const rect = emoji.getBoundingClientRect();
             const x = rect.left + rect.width / 2;
             const y = rect.top + rect.height / 2;
-            const meterPos = { x: 55, y: 55 };
+            
+            // Updated meterPos to reflect new position (top-right corner)
+            const meterElement = document.querySelector('.progress-meter');
+            const meterRect = meterElement.getBoundingClientRect();
+            const meterPos = { 
+                x: meterRect.left + meterRect.width / 2, 
+                y: meterRect.top + meterRect.height / 2 
+            };
             
             Particles.createExplosion(x, y, emojiData.isFuel, meterPos, () => {
                 progressMeter.add(emojiData.value);
@@ -798,7 +805,14 @@ class EmojiStream {
             emoji.onclick = (e) => {
                 e.stopPropagation();
                 const rect = emoji.getBoundingClientRect();
-                const meterPos = { x: 55, y: 55 };
+                
+                // Updated meterPos to reflect new position (top-right corner)
+                const meterElement = document.querySelector('.progress-meter');
+                const meterRect = meterElement.getBoundingClientRect();
+                const meterPos = { 
+                    x: meterRect.left + meterRect.width / 2, 
+                    y: meterRect.top + meterRect.height / 2 
+                };
                 
                 Particles.createExplosion(rect.left + rect.width/2, rect.top + rect.height/2, isFuel, meterPos, () => {
                     progressMeter.add(emojiData.value);
